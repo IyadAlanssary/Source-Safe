@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:network_applications/constant/app_thema.dart';
+import 'package:network_applications/constant/theme.dart';
 import 'package:network_applications/sign_up.dart';
 
 void main() {
