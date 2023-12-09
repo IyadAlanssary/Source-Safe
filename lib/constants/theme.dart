@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:network_applications/constant/colors.dart';
+import 'colors.dart';
 
 class AppTheme {
   static ThemeData get lightTheme {
@@ -10,9 +10,9 @@ class AppTheme {
     return _theme(Brightness.light, AppColors.darkColorScheme);
   }
 
-  static ThemeData _theme(Brightness brightness1, ColorScheme colors) {
+  static ThemeData _theme(Brightness brightness, ColorScheme colors) {
     return ThemeData(
-      brightness: brightness1,
+      brightness: brightness,
       useMaterial3: true,
       colorScheme: colors,
       scaffoldBackgroundColor: colors.background,

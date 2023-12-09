@@ -1,43 +1,40 @@
 import 'package:flutter/material.dart';
-import 'package:network_applications/constant/sizes.dart';
 
 class SignUp extends StatelessWidget {
- const SignUp({super.key});
-  //   final TextEditingController _email = TextEditingController();
+  const SignUp({super.key});
 
-  // final TextEditingController _password = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("network application"),
+        title: const Text('Sign Up'),
       ),
-      body:  Container(
-        padding: const EdgeInsets.all(40),
-        alignment: Alignment.center,
-
-        child:  Container(
-          width:   (MediaQuery.of(context).size.width),
-          child: const Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-            TextField(
-            decoration: InputDecoration(
-              border: OutlineInputBorder(),
-              hintText: 'Enter a search term',
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const TextField(
+              decoration: InputDecoration(
+                hintText: 'Enter your name',
+              ),
             ),
-          ),
-          gapH48,
-          TextField(
-            decoration: InputDecoration(
-              border: OutlineInputBorder(),
-              hintText: 'Password ',
+            const TextField(
+              decoration: InputDecoration(
+                hintText: 'Enter your email',
+              ),
             ),
-            
-            
-          ),
-            ],
-          ),
+            const TextField(
+              decoration: InputDecoration(
+                hintText: 'Enter your password',
+              ),
+              obscureText: true,
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {},
+              child: const Text('Sign Up'),
+            ),
+          ],
         ),
       ),
     );
