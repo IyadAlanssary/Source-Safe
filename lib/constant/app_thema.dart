@@ -7,7 +7,7 @@ class AppTheme {
   }
 
   static ThemeData get darkTheme {
-    return _theme(Brightness.light, AppColors.darkColorScheme);
+    return _theme(Brightness.dark, AppColors.darkColorScheme);
   }
 
   static ThemeData _theme(Brightness brightness1, ColorScheme colors) {
@@ -32,7 +32,7 @@ class AppTheme {
   static AppBarTheme _appBarTheme(ColorScheme colors) {
     return AppBarTheme(
       centerTitle: true,
-      backgroundColor: colors.onPrimaryContainer,
+      backgroundColor: colors.primary,
       titleTextStyle: TextStyle(
         fontFamily: "DMSans",
         fontWeight: FontWeight.bold,

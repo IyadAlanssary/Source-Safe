@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:network_applications/components/primary_button.dart';
 import 'package:network_applications/constant/sizes.dart';
 
 class SignUp extends StatelessWidget {
@@ -33,9 +34,16 @@ class SignUp extends StatelessWidget {
               border: OutlineInputBorder(),
               hintText: 'Password ',
             ),
-            
-            
           ),
+          gapH48,
+           TextField(
+            decoration: InputDecoration(
+              border: OutlineInputBorder(),
+              hintText: ' repeate Password ',
+            ),
+          ),
+          gapH48,
+          PrimaryButton(text: "submit")
             ],
           ),
         ),
