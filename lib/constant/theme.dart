@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'colors.dart';
+import 'package:network_applications/constant/color.dart';
 
 class AppTheme {
   static ThemeData get lightTheme {
@@ -7,12 +7,12 @@ class AppTheme {
   }
 
   static ThemeData get darkTheme {
-    return _theme(Brightness.light, AppColors.darkColorScheme);
+    return _theme(Brightness.dark, AppColors.darkColorScheme);
   }
 
-  static ThemeData _theme(Brightness brightness, ColorScheme colors) {
+  static ThemeData _theme(Brightness brightness1, ColorScheme colors) {
     return ThemeData(
-      brightness: brightness,
+      brightness: brightness1,
       useMaterial3: true,
       colorScheme: colors,
       scaffoldBackgroundColor: colors.background,
@@ -32,7 +32,7 @@ class AppTheme {
   static AppBarTheme _appBarTheme(ColorScheme colors) {
     return AppBarTheme(
       centerTitle: true,
-      backgroundColor: colors.onPrimaryContainer,
+      backgroundColor: colors.primary,
       titleTextStyle: TextStyle(
         fontFamily: "DMSans",
         fontWeight: FontWeight.bold,

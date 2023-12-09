@@ -1,40 +1,51 @@
 import 'package:flutter/material.dart';
+import 'package:network_applications/components/primary_button.dart';
+import 'package:network_applications/constant/sizes.dart';
 
 class SignUp extends StatelessWidget {
-  const SignUp({super.key});
+ const SignUp({super.key});
+  //   final TextEditingController _email = TextEditingController();
 
+  // final TextEditingController _password = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Sign Up'),
+        title: const Text("network application"),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const TextField(
-              decoration: InputDecoration(
-                hintText: 'Enter your name',
-              ),
+      body:  Container(
+        padding: const EdgeInsets.all(40),
+        alignment: Alignment.center,
+
+        child:  Container(
+          width:   (MediaQuery.of(context).size.width),
+          child: const Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+            TextField(
+            decoration: InputDecoration(
+              border: OutlineInputBorder(),
+              hintText: 'Enter a search term',
             ),
-            const TextField(
-              decoration: InputDecoration(
-                hintText: 'Enter your email',
-              ),
+          ),
+          gapH48,
+          TextField(
+            decoration: InputDecoration(
+              border: OutlineInputBorder(),
+              hintText: 'Password ',
             ),
-            const TextField(
-              decoration: InputDecoration(
-                hintText: 'Enter your password',
-              ),
-              obscureText: true,
+          ),
+          gapH48,
+           TextField(
+            decoration: InputDecoration(
+              border: OutlineInputBorder(),
+              hintText: ' repeate Password ',
             ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {},
-              child: const Text('Sign Up'),
-            ),
-          ],
+          ),
+          gapH48,
+          PrimaryButton(text: "submit")
+            ],
+          ),
         ),
       ),
     );

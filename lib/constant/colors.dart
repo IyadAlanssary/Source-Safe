@@ -5,11 +5,11 @@ class AppColors {
 
   static const lightColorScheme = ColorScheme(
     brightness: Brightness.light,
-    primary: Color(0xFFF9881F),
+    primary: Color(0xFF6ABC4D),
     onPrimary: Color(0xFFFFFFFF),
     primaryContainer: Color(0xFFFFDAD5),
     onPrimaryContainer: Color(0xFF410001),
-    secondary: Color(0xFF6ABC4D),
+    secondary: Color(0xFFF9881F),
     onSecondary: Color(0xFFFFFFFF),
     secondaryContainer: Color(0xFFDAFAE5),
     onSecondaryContainer: Color(0xFF127835),
