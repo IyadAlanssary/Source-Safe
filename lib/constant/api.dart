@@ -1,0 +1,2 @@
+const baseUrl = '';
+const basePath = '';
