@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:network_applications/screens/home.dart';
 import 'package:network_applications/screens/sign_up.dart';
 import 'package:network_applications/services/log_in.dart';
+import '../constants/api.dart';
 import '../constants/sizes.dart';
 
 class LogIn extends StatefulWidget {
@@ -61,9 +62,9 @@ class _LogInState extends State<LogIn> {
                 setState(() {
                   errorMsg = "";
                 });
-                var (bool loggedIn, String token) = await checkLogIn(username, password);
+                var (bool loggedIn, String tok) = await checkLogIn(username, password);
                 if(loggedIn){
-                  //TODO save token
+                  token = tok;
                   Navigator.pushReplacement(context,
                       MaterialPageRoute(builder: (context) => const Home()));
                 }
