@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:network_applications/constant/color.dart';
+
+import 'colors.dart';
 
 class AppTheme {
   static ThemeData get lightTheme {
-    return _theme(Brightness.light, AppColors.lightColorScheme);
+    return _theme(Brightness.light, lightColorScheme);
   }
 
   static ThemeData get darkTheme {
-    return _theme(Brightness.dark, AppColors.darkColorScheme);
+    return _theme(Brightness.dark, darkColorScheme);
   }
 
   static ThemeData _theme(Brightness brightness1, ColorScheme colors) {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'screens/log_in.dart';
 import 'constants/theme.dart';
-import 'log_in.dart';
 
 void main() {
   runApp(const MyApp());
@@ -13,9 +13,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Source Safe',
        theme: AppTheme.lightTheme,
-       themeMode: ThemeMode.light,
        debugShowCheckedModeBanner: false,
-      home: const LogIn(),
+      home: LogIn(),
     );
   }
 }
