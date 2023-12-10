@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:network_applications/screens/log_in.dart';
-import 'package:network_applications/screens/sign_up.dart';
 import '../constants/sizes.dart';
+import '../services/sign_up.dart';
+import 'home.dart';
 
-class SignUp extends StatelessWidget {
-  SignUp({super.key});
+class SignUp extends StatefulWidget {
+  const SignUp({super.key});
 
+  @override
+  State<SignUp> createState() => _SignUpState();
+}
+
+class _SignUpState extends State<SignUp> {
   late String username;
   late String password;
+  String errorMsg = "";
 
   @override
   Widget build(BuildContext context) {
@@ -50,20 +57,34 @@ class SignUp extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () {
-                signUp();
+              onPressed: () async {
+                setState(() {
+                  errorMsg = "";
+                });
+                var (bool signedUp, String token) = await signUp(username, password);
+                if(signedUp){
+                  //TODO save token
+                  Navigator.pushReplacement(context,
+                      MaterialPageRoute(builder: (context) => const Home()));
+                }
+                else{
+                  setState(() {
+                    errorMsg = "Something went wrong";
+                  });
+                }
               },
               child: const Text('Sign Up'),
             ),
             gapH16,
-            doNotHaveAnAccountYet(context),
+            alreadyHaveAnAccount(context),
+            Text(errorMsg, style: const TextStyle(color: Colors.red)),
           ],
         ),
       ),
     );
   }
 
-  Row doNotHaveAnAccountYet(BuildContext context) {
+  Row alreadyHaveAnAccount(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -84,9 +105,5 @@ class SignUp extends StatelessWidget {
             }),
       ],
     );
-  }
-
-  void signUp() {
-    //TODO Request Sign Up
   }
 }

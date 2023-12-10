@@ -1,12 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:network_applications/screens/home.dart';
 import 'package:network_applications/screens/sign_up.dart';
+import 'package:network_applications/services/log_in.dart';
 import '../constants/sizes.dart';
 
-class LogIn extends StatelessWidget {
-  LogIn({super.key});
+class LogIn extends StatefulWidget {
+  const LogIn({super.key});
 
+  @override
+  State<LogIn> createState() => _LogInState();
+}
+
+class _LogInState extends State<LogIn> {
   late String username;
   late String password;
+  String errorMsg = "";
 
   @override
   Widget build(BuildContext context) {
@@ -49,13 +57,31 @@ class LogIn extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () {
-                logIn();
+              onPressed: () async {
+                setState(() {
+                  errorMsg = "";
+                });
+                var (bool loggedIn, String token) = await checkLogIn(username, password);
+                if(loggedIn){
+                  //TODO save token
+                  Navigator.pushReplacement(context,
+                      MaterialPageRoute(builder: (context) => const Home()));
+                }
+                else{
+                  setState(() {
+                    errorMsg = "Something went wrong";
+                  });
+                }
+              },
+              onLongPress: () {
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) => const Home()));
               },
               child: const Text('Log in'),
             ),
             gapH16,
             doNotHaveAnAccountYet(context),
+            Text(errorMsg, style: const TextStyle(color: Colors.red)),
           ],
         ),
       ),
@@ -78,14 +104,10 @@ class LogIn extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => SignUp()),
+                MaterialPageRoute(builder: (context) => const SignUp()),
               );
             }),
       ],
     );
-  }
-
-  void logIn() {
-    //TODO Request Log In
   }
 }
