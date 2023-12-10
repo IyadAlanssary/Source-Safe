@@ -1,12 +1,11 @@
 import 'dart:convert';
 import 'dart:developer' as dev;
 import 'dart:math' as math;
-
 import 'package:http/http.dart' as http;
-import 'package:network_applications/constant/api.dart';
-import 'package:network_applications/constant/strings.dart';
 import 'package:network_applications/helpers/storage_helper.dart';
 
+import '../constants/api.dart';
+import '../constants/strings.dart';
 
 // final httpHelper = Provider<HttpHelper>((ref) {
 //   return HttpHelperImpl(storage: ref.watch(storageHelper));
