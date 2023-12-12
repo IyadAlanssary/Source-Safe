@@ -1,8 +1,14 @@
+import 'dart:developer';
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:network_applications/screens/log_in.dart';
 import 'package:network_applications/services/log_out.dart';
-import '../services/get_files.dart';
+import 'package:network_applications/services/upload_file.dart';
+import '../services/get_folder_contents.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -14,18 +20,36 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   int selectedItem = -1;
   bool isLoading = true;
+  late FilePickerResult result;
 
   @override
   void initState() {
-    getFiles();
+    getFolderContents();
     super.initState();
   }
 
-  Future<void> getFiles() async {
-    var (bool gotem, String data) = await getFilesService();
-    setState(() {
-      isLoading = false;
-    });
+  Future<void> getFolderContents() async {
+    var (bool gotem, String data) = await getFolderContentsService();
+    if (gotem) {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  void pickFile() async {
+    try {
+      result = (await FilePicker.platform.pickFiles())!;
+      if (result != null) {
+        PlatformFile file = result.files.first;
+        List<int> bytes = file.bytes!.toList();
+        uploadFile(file.name!, bytes);
+      }
+    } on PlatformException catch (e) {
+      log('Unsupported operation' + e.toString());
+    } catch (e) {
+      log(e.toString());
+    }
   }
 
   @override
@@ -68,7 +92,7 @@ class _HomeState extends State<Home> {
                       SizedBox(
                         width: RenderErrorBox.minimumWidth,
                         child: ElevatedButton(
-                          onPressed: () {},
+                          onPressed: pickFile,
                           child: const Text('Add File'),
                         ),
                       ),
