@@ -89,6 +89,29 @@ class _HomeState extends State<Home> {
                       ),
                     ],
                   ),
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: 5,
+                      itemBuilder: (context, index) => Container(
+                        color: (index == selectedItem)
+                            ? Colors.blue.withOpacity(0.5)
+                            : Colors.transparent,
+                        child: ListTile(
+                          onTap: () {
+                            if (selectedItem == index) {
+                              setState(() {
+                                selectedItem = -1;
+                              });
+                            } else {
+                              setState(() {
+                                selectedItem = index;
+                              });
+                            }
+                          },
+                          title: Text('$index'),
+                        ),
+                      ),
+                    ),
                   ),
                 ],
               ),
