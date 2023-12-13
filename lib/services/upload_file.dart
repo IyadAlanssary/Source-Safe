@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:http/http.dart' as http;
 import '../constants/api.dart';
+import 'package:http_parser/http_parser.dart';
 
 Future<void> uploadFile(String fileName, List<int> bytes) async {
   var url = Uri.parse("$localHostApi/files/upload");
@@ -10,14 +11,16 @@ Future<void> uploadFile(String fileName, List<int> bytes) async {
     request.headers['Authorization'] = 'Bearer $token';
     request.headers['Accept'] = 'application/json';
 
+
     request.fields['filename'] = fileName;
     request.fields['projectID'] = '1';
     request.fields['folderID'] = '1';
 
     request.files.add(http.MultipartFile.fromBytes(
-      fileName,
+      "file",
       bytes,
-      //contentType: MediaType('application', 'x-tar'),
+      filename: fileName,
+      contentType: MediaType('*', '*')
     ));
     print(fileName);
     print(bytes);
