@@ -53,11 +53,13 @@ class _HomeState extends State<Home> {
   }
 
   void logOut() async {
-    if (await logOutService()) {
-      if (!context.mounted) return;
+    await logOutService().whenComplete(() {
+
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => const LogIn()));
-    }
+        context,
+        MaterialPageRoute(builder: (context) => LogIn()), // Replace 'MainScreen' with the actual name of your main screen
+      );
+    });
   }
 
   void addFolderPopUp() {
