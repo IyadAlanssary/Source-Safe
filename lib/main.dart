@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'screens/log_in.dart';
+import 'package:network_applications/screens/splash_screen.dart';
 import 'constants/theme.dart';
 
 void main() {
@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
       title: 'Source Safe',
        theme: AppTheme.lightTheme,
        debugShowCheckedModeBanner: false,
-      home: LogIn(),
+      home: SplashScreen(),
     );
   }
 }

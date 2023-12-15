@@ -19,12 +19,12 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   int selectedItem = -1;
-  bool isLoading = true;
+  bool isLoading = false;
   late FilePickerResult result;
 
   @override
   void initState() {
-    getFolderContents();
+   // getFolderContents();
     super.initState();
   }
 
