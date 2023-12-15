@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:network_applications/screens/log_in.dart';
+import 'package:network_applications/services/add_folder.dart';
 import 'package:network_applications/services/log_out.dart';
 import 'package:network_applications/services/upload_file.dart';
 import '../services/get_folder_contents.dart';
@@ -46,17 +47,73 @@ class _HomeState extends State<Home> {
         uploadFile(file.name!, bytes);
       }
     } on PlatformException catch (e) {
-      log('Unsupported operation' + e.toString());
+      log('Unsupported operation$e');
     } catch (e) {
       log(e.toString());
     }
+  }
+
+  void logOut() async {
+    if (await logOutService()) {
+      if (!context.mounted) return;
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => const LogIn()));
+    }
+  }
+
+  void addFolderPopUp() {
+    final folderTextController = TextEditingController();
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Enter Folder Name'),
+            content: TextFormField(
+              controller: folderTextController,
+            ),
+            actions: <Widget>[
+              TextButton(
+                  child: const Text('Add'),
+                  onPressed: () {
+                    if (folderTextController.text.isEmpty) {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text('Error'),
+                            content: const Text('Please enter the folder\'s name'),
+                            actions: <Widget>[
+                              TextButton(
+                                child: const Text('Ok'),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    } else {
+                      addFolderService(folderTextController.text, 1, 1);
+                      Navigator.of(context).pop();
+                    }
+                  }),
+              TextButton(
+                child: const Text('Cancel'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: isLoading
-          ? const CircularProgressIndicator()
+          ? const Center(child: CircularProgressIndicator())
           : Padding(
               padding: const EdgeInsets.all(8.0),
               child: Column(
@@ -68,15 +125,7 @@ class _HomeState extends State<Home> {
                       SizedBox(
                         width: RenderErrorBox.minimumWidth,
                         child: ElevatedButton(
-                            onPressed: () async {
-                              if (await logOut()) {
-                                Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => const LogIn()));
-                              }
-                            },
-                            child: const Text("Log Out")),
+                            onPressed: logOut, child: const Text("Log Out")),
                       )
                     ],
                   ),
@@ -85,7 +134,7 @@ class _HomeState extends State<Home> {
                       SizedBox(
                         width: RenderErrorBox.minimumWidth,
                         child: ElevatedButton(
-                          onPressed: () {},
+                          onPressed: addFolderPopUp,
                           child: const Text('Add Folder'),
                         ),
                       ),
@@ -97,6 +146,13 @@ class _HomeState extends State<Home> {
                         ),
                       ),
                       const Spacer(),
+                      SizedBox(
+                        width: RenderErrorBox.minimumWidth,
+                        child: ElevatedButton(
+                          onPressed: () {},
+                          child: const Text('Download'),
+                        ),
+                      ),
                       SizedBox(
                         width: RenderErrorBox.minimumWidth,
                         child: ElevatedButton(

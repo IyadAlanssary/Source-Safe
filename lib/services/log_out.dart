@@ -1,7 +1,7 @@
 import "package:http/http.dart" as http;
 import "package:network_applications/constants/api.dart";
 
-Future<bool> logOut() async {
+Future<bool> logOutService() async {
   final response = await http.post(Uri.parse("$localHostApi/logout"),
       headers: {
         "Content-Type": "application/json",

@@ -11,7 +11,6 @@ Future<void> uploadFile(String fileName, List<int> bytes) async {
     request.headers['Authorization'] = 'Bearer $token';
     request.headers['Accept'] = 'application/json';
 
-
     request.fields['filename'] = fileName;
     request.fields['projectID'] = '1';
     request.fields['folderID'] = '1';
@@ -22,21 +21,15 @@ Future<void> uploadFile(String fileName, List<int> bytes) async {
       filename: fileName,
       contentType: MediaType('*', '*')
     ));
-    print(fileName);
-    print(bytes);
+
     final response = await request.send();
     if (response.statusCode == 201) {
-      print("Uploaded!");
       var responseString = await response.stream.bytesToString();
       print('Response: $responseString');
     } else {
       print('Failed with status code ${response.statusCode}');
       print('Error: ${response.reasonPhrase}');
     }
-    print("End");
-    //final response = await http.Response.fromStream(a);
-    //print(response.body);
-    //final responseDecoded = jsonDecode(response.body);
   } catch (e) {
     log(e.toString());
   }
