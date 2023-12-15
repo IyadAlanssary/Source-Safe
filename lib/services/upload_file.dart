@@ -5,7 +5,6 @@ import 'package:http_parser/http_parser.dart';
 
 Future<void> uploadFile(String fileName, List<int> bytes) async {
   var url = Uri.parse("$localHostApi/files/upload");
-
   try {
     var request = http.MultipartRequest("POST", url);
     request.headers['Authorization'] = 'Bearer $token';
