@@ -8,8 +8,7 @@ Future<void> uploadFile(String fileName, List<int> bytes, int projectId, int fol
 
   SharedPreferences pref = await SharedPreferences.getInstance();
   var cache = pref.getString("token");
-
-
+  
   var url = Uri.parse("$localHostApi/files/upload");
   try {
     var request = http.MultipartRequest("POST", url);

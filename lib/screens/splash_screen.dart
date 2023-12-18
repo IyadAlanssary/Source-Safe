@@ -2,12 +2,12 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:network_applications/screens/home.dart';
-import 'package:provider/provider.dart';
 import '../helpers/shared_pref_helper.dart';
-import '../services/get_folder_contents.dart';
 import 'log_in.dart';
 
 class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
+
   @override
   _SplashScreenState createState() => _SplashScreenState();
 }
@@ -20,21 +20,17 @@ class _SplashScreenState extends State<SplashScreen> {
     _prefService.readCache("token").then((value) {
       print(value.toString());
       if (value != null) {
-        return Timer(Duration(seconds: 3), () {
+        return Timer(const Duration(seconds: 3), () {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(
-                builder: (context) =>
-                    Home()), // Replace 'MainScreen' with the actual name of your main screen
+            MaterialPageRoute(builder: (context) => const Home()),
           );
         });
       } else {
-        return Timer(Duration(seconds: 3), () {
+        return Timer(const Duration(seconds: 3), () {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(
-                builder: (context) =>
-                    LogIn()), // Replace 'MainScreen' with the actual name of your main screen
+            MaterialPageRoute(builder: (context) => const LogIn()),
           );
         });
       }

@@ -12,9 +12,6 @@ void downloadFile(int fileId) {
 
   request.responseType = 'blob';
 
-  request.response.headers.set('Access-Control-Expose-Headers', 'Content-Disposition');
-  // request.response.headers.set('Content-Disposition', 'attachment; filename="test.txt"');
-
   request.onLoad.listen((event) {
     html.AnchorElement anchorElement = html.AnchorElement(
         href: html.Url.createObjectUrlFromBlob(request.response));
@@ -27,6 +24,9 @@ void downloadFile(int fileId) {
   });
   request.send();
 }
+
+// request.response.headers.set('Access-Control-Expose-Headers', 'Content-Disposition');
+// request.response.headers.set('Content-Disposition', 'attachment; filename="test.txt"');
 
 
 //

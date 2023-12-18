@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
           title: 'Source Safe',
           theme: AppTheme.lightTheme,
           debugShowCheckedModeBanner: false,
-          home: SplashScreen(),
+          home: const SplashScreen(),
         ));
   }
 }
