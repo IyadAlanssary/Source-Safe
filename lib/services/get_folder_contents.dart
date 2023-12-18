@@ -13,11 +13,11 @@ class GetContents extends ChangeNotifier {
   /*List<MyComponent> _files = [];
   List<MyComponent> _folders = [];*/
 
-  Future<List<MyComponent>> folderContentsService() async {
+  Future<List<MyComponent>> folderContentsService({int? index = 1}) async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     var cache = pref.getString("token");
     final response = await http.get(
-      Uri.parse("$localHostApi/folders/1"),
+      Uri.parse("$localHostApi/folders/$index"),
       headers: {
         "Content-Type": "application/json",
         "Accept": "application/json",

@@ -14,6 +14,16 @@ class MyExplorer extends StatefulWidget {
 class _MyExplorerState extends State<MyExplorer> {
   int selectedItem = -1;
 
+  Future<void> _exploreFolder() async {
+    final studentController = Provider.of<GetContents>(context, listen: false);
+
+    // Fetch the updated posts
+    await studentController.folderContentsService();
+
+    // Now that the posts are updated, trigger a rebuild of the widget
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<GetContents>(
@@ -34,10 +44,14 @@ class _MyExplorerState extends State<MyExplorer> {
                         ? Colors.blue.withOpacity(0.5)
                         : Colors.transparent,
                     child: GestureDetector(
+                      onDoubleTap: () async => setState(() {
+                        _exploreFolder();
+                      }),
                       onTap: () {
                         if (selectedItem == index) {
                           setState(() {
                             selectedItem = -1;
+                            selectedItem = components[index].
                           });
                         } else {
                           setState(() {
