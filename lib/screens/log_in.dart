@@ -55,25 +55,13 @@ class _LogInState extends State<LogIn> {
                 password = value;
               },
               obscureText: true,
+              onSubmitted: (value) {
+                logIn();
+              },
             ),
             const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () async {
-                setState(() {
-                  errorMsg = "";
-                });
-                var (bool loggedIn, String tok) = await checkLogIn(username, password);
-                if(loggedIn){
-                  token = tok;
-                  Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (context) => const Home()));
-                }
-                else{
-                  setState(() {
-                    errorMsg = "Something went wrong";
-                  });
-                }
-              },
+              onPressed: logIn,
               onLongPress: () {
                 Navigator.pushReplacement(context,
                     MaterialPageRoute(builder: (context) => const Home()));
@@ -87,6 +75,22 @@ class _LogInState extends State<LogIn> {
         ),
       ),
     );
+  }
+
+  void logIn() async {
+    setState(() {
+      errorMsg = "";
+    });
+    var (bool loggedIn, String tok) = await checkLogIn(username, password);
+    if (loggedIn) {
+      token = tok;
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => const Home()));
+    } else {
+      setState(() {
+        errorMsg = "Something went wrong";
+      });
+    }
   }
 
   Row doNotHaveAnAccountYet(BuildContext context) {
