@@ -1,4 +1,4 @@
-class MyComponent {
+abstract class MyComponent {
   String? icon;
   int id;
   String name;

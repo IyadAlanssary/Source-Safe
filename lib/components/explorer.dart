@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:network_applications/models/component.dart';
 import 'package:provider/provider.dart';
 
+import '../models/file.dart';
+import '../models/folder.dart';
 import '../services/get_folder_contents.dart';
 
 class MyExplorer extends StatefulWidget {
-  const MyExplorer({super.key});
+  final int folderId;
+  const MyExplorer({super.key, required this.folderId});
 
   @override
   State<MyExplorer> createState() => _MyExplorerState();
@@ -13,6 +16,8 @@ class MyExplorer extends StatefulWidget {
 
 class _MyExplorerState extends State<MyExplorer> {
   int selectedItem = -1;
+  int selectedFileId = -1;
+  int selectedFolderId = -1;
 
   @override
   Widget build(BuildContext context) {
@@ -20,13 +25,13 @@ class _MyExplorerState extends State<MyExplorer> {
         builder: (context, componentController, child) {
       return FutureBuilder<List<MyComponent>>(
           future: componentController
-              .folderContentsService(), // Use the provider here
+              .folderContentsService(widget.folderId), // Use the provider here
           builder: (BuildContext context,
               AsyncSnapshot<List<MyComponent>> snapshot) {
             if (snapshot.hasData) {
               List<MyComponent> components = snapshot.data!;
+
               return SizedBox(
-                  // width: 90,
                   child: ListView.builder(
                 itemCount: components.length,
                 itemBuilder: (context, index) => Container(
@@ -38,10 +43,22 @@ class _MyExplorerState extends State<MyExplorer> {
                         if (selectedItem == index) {
                           setState(() {
                             selectedItem = -1;
+                            selectedFileId = -1;
+                            selectedFolderId = -1;
                           });
                         } else {
                           setState(() {
                             selectedItem = index;
+                            if(components[index] is MyFolder){
+                              selectedFileId = -1;
+                              selectedFolderId = components[index].id;
+                            }
+                            else if(components[index] is MyFile){
+                              selectedFolderId = -1;
+                              selectedFileId = components[index].id;
+                            }
+                            print("File id "+selectedFileId.toString());
+                            print("Folder id "+selectedFolderId.toString());
                           });
                         }
                       },
