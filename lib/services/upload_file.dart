@@ -1,11 +1,10 @@
 import 'dart:developer';
-import 'dart:html';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../constants/api.dart';
 import 'package:http_parser/http_parser.dart';
 
-Future<void> uploadFile(String fileName, List<int> bytes) async {
+Future<void> uploadFile(String fileName, List<int> bytes, int projectId, int folderId) async {
 
   SharedPreferences pref = await SharedPreferences.getInstance();
   var cache = pref.getString("token");
@@ -18,8 +17,8 @@ Future<void> uploadFile(String fileName, List<int> bytes) async {
     request.headers['Accept'] = 'application/json';
 
     request.fields['filename'] = fileName;
-    request.fields['projectID'] = '1';
-    request.fields['folderID'] = '1';
+    request.fields['projectID'] = projectId.toString();
+    request.fields['folderID'] = folderId.toString();
 
     request.files.add(http.MultipartFile.fromBytes(
       "file",

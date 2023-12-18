@@ -11,7 +11,7 @@ Future<(bool, String)> addFolderService(
   };
   String jsonPayload = json.encode(request);
 
-  final response = await http.post(Uri.parse("$localHostApi/folders/new"),
+  final response = await http.post(Uri.parse("$localHostApi/folders"),
       headers: {
         "Content-Type": "application/json",
         "Accept": "application/json",
