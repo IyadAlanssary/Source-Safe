@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:ui';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -177,12 +178,45 @@ class _HomeState extends State<Home> {
                       ),
                     ],
                   ),
-                  const Expanded(
-                    child: MyExplorer(),
+                  Expanded(
+                    child: ScrollConfiguration(
+                        behavior: ScrollConfiguration.of(context).copyWith(
+                          physics: const BouncingScrollPhysics(),
+                          dragDevices: {
+                            PointerDeviceKind.touch,
+                            PointerDeviceKind.mouse,
+                            PointerDeviceKind.trackpad
+                          },
+                        ),
+                        child: RefreshIndicator(
+                            onRefresh: () async => setState(() {
+                                  _refreshList();
+                                }),
+                            child: MyExplorer())),
                   ),
                 ],
               ),
             ),
+    );
+  }
+
+  Future<void> _refreshList() async {
+    final studentController = Provider.of<GetContents>(context, listen: false);
+
+    // Fetch the updated posts
+    await studentController.folderContentsService();
+
+    // Now that the posts are updated, trigger a rebuild of the widget
+    setState(() {});
+
+    // Show a snack-bar or toast to inform the user that the refresh is complete
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+          backgroundColor: Colors.lightGreen,
+          content: Text(
+            '!تم التحديث',
+            //    style: StylesManager.medium16White(),
+          )),
     );
   }
 }
