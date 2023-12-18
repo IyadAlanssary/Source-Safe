@@ -45,7 +45,7 @@ class _HomeState extends State<Home> {
       if (result != null) {
         PlatformFile file = result.files.first;
         List<int> bytes = file.bytes!.toList();
-        uploadFile(file.name!, bytes);
+        uploadFile(file.name!, bytes, 1, 1);
       }
     } on PlatformException catch (e) {
       log('Unsupported operation$e');
@@ -177,7 +177,7 @@ class _HomeState extends State<Home> {
                       ),
                     ],
                   ),
-                  Expanded(
+                  const Expanded(
                     child: MyExplorer(),
                   ),
                 ],
