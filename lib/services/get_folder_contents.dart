@@ -9,9 +9,9 @@ import "package:shared_preferences/shared_preferences.dart";
 
 class GetContents extends ChangeNotifier {
   List<MyComponent> _filesAndFolders = [];
-  late final List<MyComponent> _filesAndFoldersEmpty;
-  List<MyComponent> _files = [];
-  List<MyComponent> _folders = [];
+//  late final List<MyComponent> _filesAndFoldersEmpty;
+  /*List<MyComponent> _files = [];
+  List<MyComponent> _folders = [];*/
 
   Future<List<MyComponent>> folderContentsService() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
@@ -27,6 +27,7 @@ class GetContents extends ChangeNotifier {
 
     // if (response.statusCode == 200) {
     final responseDecoded = jsonDecode(response.body);
+    print(response.statusCode);
     // print(responseDecoded);
 
     final List<MyFolder> loadedFolders = [];
@@ -36,19 +37,19 @@ class GetContents extends ChangeNotifier {
     final dataFiles = responseDecoded["data"]["files"] as List<dynamic>;
 
     for (int i = 0; i < dataFolders.length; i++) {
-      print("object");
+      print("objectfsdfffffffffffffffff");
       loadedFolders.add(MyFolder(
         id: dataFolders[i]["id"],
         name: dataFolders[i]["name"],
-        projectId: dataFolders[i]["projectID"],
-        folderId: dataFolders[i]["folderID"],
+        projectId: dataFolders[i]["project_id"],
+        folderId: dataFolders[i]["folder_id"],
         createdAt: dataFolders[i]["created_at"],
         updatedAt: dataFolders[i]["updated_at"],
       ));
     }
     print("obadssdaject");
     for (int j = 0; j < dataFiles.length; j++) {
-      // print(" Herreee  $dataFiles");
+      print(" Herreee  $dataFiles");
       /*print(dataFiles[j]["id"]);
       print(dataFiles[j]["name"]);
       print(dataFiles[j]["projectID"]);
@@ -59,8 +60,8 @@ class GetContents extends ChangeNotifier {
       loadedFiles.add(MyFile(
         id: dataFiles[j]["id"],
         name: dataFiles[j]["name"],
-        projectId: dataFiles[j]["projectID"],
-        folderId: dataFiles[j]["folderID"],
+        projectId: dataFiles[j]["project_id"],
+        folderId: dataFiles[j]["folder_id"],
         createdAt: dataFiles[j]["created_at"],
         updatedAt: dataFiles[j]["updated_at"],
         serverPath: dataFiles[j]["serverPath"],
