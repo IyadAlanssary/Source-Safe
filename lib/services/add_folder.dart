@@ -1,6 +1,7 @@
 import "dart:convert";
 import "package:http/http.dart" as http;
 import "package:network_applications/constants/api.dart";
+import "package:shared_preferences/shared_preferences.dart";
 
 Future<(bool, String)> addFolderService(
     String folderName, int projectId, int folderId) async {
@@ -9,13 +10,15 @@ Future<(bool, String)> addFolderService(
     "projectID": projectId,
     "folderID": folderId
   };
+  SharedPreferences pref = await SharedPreferences.getInstance();
+  var cache = pref.getString("token");
   String jsonPayload = json.encode(request);
 
   final response = await http.post(Uri.parse("$localHostApi/folders"),
       headers: {
         "Content-Type": "application/json",
         "Accept": "application/json",
-        'Authorization': 'Bearer $token'
+        'Authorization': 'Bearer $cache'
       },
       body: jsonPayload);
   final responseDecoded = jsonDecode(response.body);
