@@ -23,15 +23,14 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   late FilePickerResult result;
+  int currentFolderId = 1;
 
   void pickFile() async {
     try {
       result = (await FilePicker.platform.pickFiles())!;
-      if (result != null) {
-        PlatformFile file = result.files.first;
-        List<int> bytes = file.bytes!.toList();
-        uploadFile(file.name!, bytes, 1, 1);
-      }
+      PlatformFile file = result.files.first;
+      List<int> bytes = file.bytes!.toList();
+      uploadFile(file.name!, bytes, 1, currentFolderId);
     } on PlatformException catch (e) {
       log('Unsupported operation$e');
     } catch (e) {
@@ -63,26 +62,11 @@ class _HomeState extends State<Home> {
                   child: const Text('Add'),
                   onPressed: () {
                     if (folderTextController.text.isEmpty) {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: const Text('Error'),
-                            content:
-                                const Text('Please enter the folder\'s name'),
-                            actions: <Widget>[
-                              TextButton(
-                                child: const Text('Ok'),
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                              ),
-                            ],
-                          );
-                        },
-                      );
+                      showErrorPopUp(
+                          'Error', 'Please enter the folder\'s name');
                     } else {
-                      addFolderService(folderTextController.text, 1, 1);
+                      addFolderService(
+                          folderTextController.text, 1, currentFolderId);
                       Navigator.of(context).pop();
                     }
                   }),
@@ -103,38 +87,23 @@ class _HomeState extends State<Home> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: const Text('Enter Duration to check in file in days'),
+            title: const Text('Enter days to check in file'),
             content: TextFormField(
               controller: fileCheckDurationController,
             ),
             actions: <Widget>[
               TextButton(
                   child: const Text('Ok'),
-                  onPressed: () {
+                  onPressed: () async {
                     if (fileCheckDurationController.text.isEmpty ||
                         int.tryParse(fileCheckDurationController.text) ==
                             null) {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: const Text('Error'),
-                            content:
-                                const Text('Please enter the the duration'),
-                            actions: <Widget>[
-                              TextButton(
-                                child: const Text('Ok'),
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                              ),
-                            ],
-                          );
-                        },
-                      );
+                      showErrorPopUp("Error", "Please enter a valid number");
                     } else {
-                      checkInService(1, fileCheckDurationController.text);
+                      String message = await checkInService(
+                          selectedFileId, fileCheckDurationController.text);
                       Navigator.of(context).pop();
+                      showErrorPopUp("Info", message);
                     }
                   }),
               TextButton(
@@ -146,6 +115,26 @@ class _HomeState extends State<Home> {
             ],
           );
         });
+  }
+
+  void showErrorPopUp(String title, String text) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          content: Text(text),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Ok'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -187,8 +176,11 @@ class _HomeState extends State<Home> {
                   width: RenderErrorBox.minimumWidth,
                   child: ElevatedButton(
                     onPressed: () {
-                      //TODO select file id
-                      downloadFile(1);
+                      if (selectedFileId == -1) {
+                        showErrorPopUp("Error", "Please select a File");
+                      } else {
+                        downloadFile(selectedFileId);
+                      }
                     },
                     child: const Text('Download'),
                   ),
@@ -196,21 +188,33 @@ class _HomeState extends State<Home> {
                 SizedBox(
                   width: RenderErrorBox.minimumWidth,
                   child: ElevatedButton(
-                    onPressed: checkInPopUp,
+                    onPressed: () {
+                      if (selectedFileId == -1) {
+                        showErrorPopUp("Error", "Please select a file");
+                      } else {
+                        checkInPopUp();
+                      }
+                    },
                     child: const Text('Check In'),
                   ),
                 ),
                 SizedBox(
                   width: RenderErrorBox.minimumWidth,
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      if (selectedFileId == -1) {
+                        showErrorPopUp("Error", "Please select a file");
+                      } else {
+                        //TODO check out
+                      }
+                    },
                     child: const Text('Check Out'),
                   ),
                 ),
               ],
             ),
-            const Expanded(
-              child: MyExplorer(folderId: 1),
+            Expanded(
+              child: MyExplorer(folderId: currentFolderId),
             ),
           ],
         ),
@@ -222,7 +226,7 @@ class _HomeState extends State<Home> {
     final studentController = Provider.of<GetContents>(context, listen: false);
 
     // Fetch the updated posts
-    await studentController.folderContentsService();
+    await studentController.folderContentsService(currentFolderId);
 
     // Now that the posts are updated, trigger a rebuild of the widget
     setState(() {});
