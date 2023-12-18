@@ -6,9 +6,12 @@ import '../models/file.dart';
 import '../models/folder.dart';
 import '../services/get_folder_contents.dart';
 
+int selectedFileId = -1;
+int selectedFolderId = -1;
+
 class MyExplorer extends StatefulWidget {
   final int folderId;
-  const MyExplorer({super.key, required this.folderId});
+  MyExplorer({super.key, required this.folderId});
 
   @override
   State<MyExplorer> createState() => _MyExplorerState();
@@ -16,8 +19,6 @@ class MyExplorer extends StatefulWidget {
 
 class _MyExplorerState extends State<MyExplorer> {
   int selectedItem = -1;
-  int selectedFileId = -1;
-  int selectedFolderId = -1;
 
   @override
   Widget build(BuildContext context) {
@@ -57,8 +58,6 @@ class _MyExplorerState extends State<MyExplorer> {
                               selectedFolderId = -1;
                               selectedFileId = components[index].id;
                             }
-                            print("File id "+selectedFileId.toString());
-                            print("Folder id "+selectedFolderId.toString());
                           });
                         }
                       },
