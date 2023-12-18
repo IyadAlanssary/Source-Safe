@@ -211,10 +211,10 @@ class _HomeState extends State<Home> {
 
     // Show a snack-bar or toast to inform the user that the refresh is complete
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
+      const SnackBar(
           backgroundColor: Colors.lightGreen,
           content: Text(
-            '!تم التحديث',
+            "Updated",
             //    style: StylesManager.medium16White(),
           )),
     );
