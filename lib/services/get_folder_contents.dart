@@ -9,15 +9,12 @@ import "package:shared_preferences/shared_preferences.dart";
 
 class GetContents extends ChangeNotifier {
   List<MyComponent> _filesAndFolders = [];
-//  late final List<MyComponent> _filesAndFoldersEmpty;
-  /*List<MyComponent> _files = [];
-  List<MyComponent> _folders = [];*/
 
-  Future<List<MyComponent>> folderContentsService({int? index = 1}) async {
+  Future<List<MyComponent>> folderContentsService(int folderId) async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     var cache = pref.getString("token");
     final response = await http.get(
-      Uri.parse("$localHostApi/folders/$index"),
+      Uri.parse("$localHostApi/folders/$folderId"),
       headers: {
         "Content-Type": "application/json",
         "Accept": "application/json",
@@ -25,11 +22,7 @@ class GetContents extends ChangeNotifier {
       },
     );
 
-    // if (response.statusCode == 200) {
     final responseDecoded = jsonDecode(response.body);
-    print(response.statusCode);
-    // print(responseDecoded);
-
     final List<MyFolder> loadedFolders = [];
     final List<MyComponent> loadedComponents = [];
     List<MyFile> loadedFiles = [];
@@ -37,7 +30,6 @@ class GetContents extends ChangeNotifier {
     final dataFiles = responseDecoded["data"]["files"] as List<dynamic>;
 
     for (int i = 0; i < dataFolders.length; i++) {
-      print("objectfsdfffffffffffffffff");
       loadedFolders.add(MyFolder(
         id: dataFolders[i]["id"],
         name: dataFolders[i]["name"],
@@ -47,16 +39,7 @@ class GetContents extends ChangeNotifier {
         updatedAt: dataFolders[i]["updated_at"],
       ));
     }
-    print("obadssdaject");
     for (int j = 0; j < dataFiles.length; j++) {
-      print(" Herreee  $dataFiles");
-      /*print(dataFiles[j]["id"]);
-      print(dataFiles[j]["name"]);
-      print(dataFiles[j]["projectID"]);
-      print(dataFiles[j]["folderID"]);
-      print(dataFiles[j]["created_at"]);
-      print(dataFiles[j]["updated_at"]);
-      print(dataFiles[j]["serverPath"]);*/
       loadedFiles.add(MyFile(
         id: dataFiles[j]["id"],
         name: dataFiles[j]["name"],
@@ -65,18 +48,12 @@ class GetContents extends ChangeNotifier {
         createdAt: dataFiles[j]["created_at"],
         updatedAt: dataFiles[j]["updated_at"],
         serverPath: dataFiles[j]["serverPath"],
-        //checked: dataFiles[i]["checkedInBy"]
       ));
     }
-    print(loadedFiles);
     loadedComponents.addAll(loadedFolders);
     loadedComponents.addAll(loadedFiles);
-    print("sadsadasdsdad $loadedComponents ");
     _filesAndFolders = loadedComponents;
     return _filesAndFolders;
-    /* } else {
-      return _filesAndFoldersEmpty;
-    }*/
   }
 
   Future<List<MyComponent>> getFilesAndFolders() async {

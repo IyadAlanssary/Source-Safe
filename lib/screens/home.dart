@@ -214,8 +214,22 @@ class _HomeState extends State<Home> {
               ],
             ),
             Expanded(
-              child: MyExplorer(folderId: currentFolderId),
-            ),
+                child: ScrollConfiguration(
+              behavior: ScrollConfiguration.of(context).copyWith(
+                physics: const BouncingScrollPhysics(),
+                dragDevices: {
+                  PointerDeviceKind.touch,
+                  PointerDeviceKind.mouse,
+                  PointerDeviceKind.trackpad
+                },
+              ),
+              child: RefreshIndicator(
+                onRefresh: () async => setState(() {
+                  _refreshList();
+                }),
+                child: MyExplorer(folderId: currentFolderId),
+              ),
+            ))
           ],
         ),
       ),
