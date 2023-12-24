@@ -30,7 +30,9 @@ class _HomeState extends State<Home> {
       result = (await FilePicker.platform.pickFiles())!;
       PlatformFile file = result.files.first;
       List<int> bytes = file.bytes!.toList();
-      uploadFile(file.name!, bytes, 1, currentFolderId);
+      if (!await uploadFile(file.name!, bytes, 1, currentFolderId)) {
+        showErrorPopUp("Error", "Could not upload file");
+      }
     } on PlatformException catch (e) {
       log('Unsupported operation$e');
     } catch (e) {
@@ -60,14 +62,17 @@ class _HomeState extends State<Home> {
             actions: <Widget>[
               TextButton(
                   child: const Text('Add'),
-                  onPressed: () {
+                  onPressed: () async {
                     if (folderTextController.text.isEmpty) {
                       showErrorPopUp(
                           'Error', 'Please enter the folder\'s name');
                     } else {
-                      addFolderService(
-                          folderTextController.text, 1, currentFolderId);
-                      Navigator.of(context).pop();
+                      if (await addFolderService(
+                          folderTextController.text, 1, currentFolderId)) {
+                        Navigator.of(context).pop();
+                      } else {
+                        showErrorPopUp("Error", "Could not add folder");
+                      }
                     }
                   }),
               TextButton(

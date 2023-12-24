@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:network_applications/screens/log_in.dart';
-import '../constants/api.dart';
 import '../constants/sizes.dart';
 import '../services/sign_up.dart';
 import 'home.dart';
@@ -62,9 +61,7 @@ class _SignUpState extends State<SignUp> {
                 setState(() {
                   errorMsg = "";
                 });
-                var (bool signedUp, String tok) = await signUp(username, password);
-                if(signedUp){
-                  token = tok;
+                if(await signUp(username, password)){
                   Navigator.pushReplacement(context,
                       MaterialPageRoute(builder: (context) => const Home()));
                 }

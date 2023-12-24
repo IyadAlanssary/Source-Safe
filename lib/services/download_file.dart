@@ -11,7 +11,6 @@ Future<void> downloadFile(int fileId) async {
   request.responseType = 'blob';
 
   request.onLoad.listen((event) {
-
     var contentDisposition = request.responseHeaders['content-disposition'];
     print('Content-Disposition: $contentDisposition');
     String? header = request.getResponseHeader('Content-Disposition');
