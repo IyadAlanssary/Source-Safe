@@ -1,15 +1,13 @@
 import "package:network_applications/constants/api.dart";
 import 'dart:html' as html;
-import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> downloadFile(int fileId) async {
   String url = "$localHostApi/files/$fileId/download";
-  SharedPreferences pref = await SharedPreferences.getInstance();
-  var cache = pref.getString("token");
+  String token = await getToken();
 
   html.HttpRequest request = html.HttpRequest();
   request.open('GET', url);
-  request.setRequestHeader('Authorization', 'Bearer $cache');
+  request.setRequestHeader('Authorization', 'Bearer $token');
   request.responseType = 'blob';
 
   request.onLoad.listen((event) {

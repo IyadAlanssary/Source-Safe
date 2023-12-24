@@ -5,20 +5,18 @@ import "package:network_applications/constants/api.dart";
 import "package:network_applications/models/component.dart";
 import "package:network_applications/models/file.dart";
 import "package:network_applications/models/folder.dart";
-import "package:shared_preferences/shared_preferences.dart";
 
 class GetContents extends ChangeNotifier {
   List<MyComponent> _filesAndFolders = [];
 
   Future<List<MyComponent>> folderContentsService(int folderId) async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    var cache = pref.getString("token");
+    String token = await getToken();
     final response = await http.get(
       Uri.parse("$localHostApi/folders/$folderId"),
       headers: {
         "Content-Type": "application/json",
         "Accept": "application/json",
-        'Authorization': 'Bearer $cache'
+        'Authorization': 'Bearer $token'
       },
     );
 
