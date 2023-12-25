@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:network_applications/components/explorer.dart';
+import 'package:network_applications/components/info_pop_up.dart';
 import 'package:network_applications/screens/log_in.dart';
 import 'package:network_applications/components/projects_bar.dart';
 import 'package:network_applications/services/add_folder.dart';
@@ -14,6 +15,7 @@ import 'package:network_applications/services/get_my_projects.dart';
 import 'package:network_applications/services/log_out.dart';
 import 'package:network_applications/services/upload_file.dart';
 import 'package:provider/provider.dart';
+import '../services/add_project.dart';
 import '../services/get_folder_contents.dart';
 
 class Home extends StatefulWidget {
@@ -35,7 +37,7 @@ class _HomeState extends State<Home> {
       if (await uploadFile(file.name, bytes, 1, currentFolderId)) {
         refreshList();
       } else {
-        showErrorPopUp("Error", "Could not upload file");
+        infoPopUp(context, title: "Error", info: "Could not upload file");
       }
     } on PlatformException catch (e) {
       log('Unsupported operation$e');
@@ -69,15 +71,14 @@ class _HomeState extends State<Home> {
                   child: const Text('Add'),
                   onPressed: () async {
                     if (folderTextController.text.isEmpty) {
-                      showErrorPopUp(
-                          'Error', 'Please enter the folder\'s name');
+                      infoPopUp(context, title: "Error", info: 'Please enter the folder\'s name');
                     } else {
                       if (await addFolderService(
                           folderTextController.text, 1, currentFolderId)) {
                         Navigator.of(context).pop();
                         refreshList();
                       } else {
-                        showErrorPopUp("Error", "Could not add folder");
+                        infoPopUp(context, title: "Error", info: "Could not add folder");
                       }
                     }
                   }),
@@ -110,7 +111,7 @@ class _HomeState extends State<Home> {
                     if (fileCheckDurationController.text.isEmpty ||
                         int.tryParse(fileCheckDurationController.text) ==
                             null) {
-                      showErrorPopUp("Error", "Please enter a valid number");
+                      infoPopUp(context, title: "Error", info: "Please enter a valid number");
                     } else {
                       String message = await checkInService(
                           selectedFileId, fileCheckDurationController.text);
@@ -118,7 +119,7 @@ class _HomeState extends State<Home> {
                         Navigator.of(context).pop();
                         refreshList();
                       } else {
-                        showErrorPopUp("Info", message);
+                        infoPopUp(context, title: "Error", info: message);
                       }
                     }
                   }),
@@ -131,26 +132,6 @@ class _HomeState extends State<Home> {
             ],
           );
         });
-  }
-
-  void showErrorPopUp(String title, String text) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(title),
-          content: Text(text),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Ok'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
   }
 
   @override
@@ -218,7 +199,7 @@ class _HomeState extends State<Home> {
           child: ElevatedButton(
             onPressed: () {
               if (selectedFileId == -1) {
-                showErrorPopUp("Error", "Please select a File");
+                infoPopUp(context, title: "Error", info: "Please select a file");
               } else {
                 downloadFile(selectedFileId);
               }
@@ -231,7 +212,7 @@ class _HomeState extends State<Home> {
           child: ElevatedButton(
             onPressed: () {
               if (selectedFileId == -1) {
-                showErrorPopUp("Error", "Please select a file");
+                infoPopUp(context, title: "Error", info: "Please select a file");
               } else {
                 checkInPopUp();
               }
@@ -244,7 +225,7 @@ class _HomeState extends State<Home> {
           child: ElevatedButton(
             onPressed: () {
               if (selectedFileId == -1) {
-                showErrorPopUp("Error", "Please select a file");
+                infoPopUp(context, title: "Error", info: "Please select a file");
               } else {
                 //TODO check out
               }
