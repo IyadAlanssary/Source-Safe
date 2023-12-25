@@ -11,7 +11,10 @@ int selectedFolderId = -1;
 
 class MyExplorer extends StatefulWidget {
   final int folderId;
-  MyExplorer({super.key, required this.folderId});
+  final int projectId;
+
+  const MyExplorer(
+      {super.key, required this.folderId, required this.projectId});
 
   @override
   State<MyExplorer> createState() => _MyExplorerState();
@@ -22,16 +25,14 @@ class _MyExplorerState extends State<MyExplorer> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<GetContents>(
+    return Consumer<GetFolderContents>(
         builder: (context, componentController, child) {
       return FutureBuilder<List<MyComponent>>(
-          future: componentController
-              .folderContentsService(widget.folderId), // Use the provider here
+          future: componentController.folderContentsService(widget.folderId),
           builder: (BuildContext context,
               AsyncSnapshot<List<MyComponent>> snapshot) {
             if (snapshot.hasData) {
               List<MyComponent> components = snapshot.data!;
-
               return SizedBox(
                   child: ListView.builder(
                 itemCount: components.length,
@@ -50,11 +51,10 @@ class _MyExplorerState extends State<MyExplorer> {
                         } else {
                           setState(() {
                             selectedItem = index;
-                            if(components[index] is MyFolder){
+                            if (components[index] is MyFolder) {
                               selectedFileId = -1;
                               selectedFolderId = components[index].id;
-                            }
-                            else if(components[index] is MyFile){
+                            } else if (components[index] is MyFile) {
                               selectedFolderId = -1;
                               selectedFileId = components[index].id;
                             }

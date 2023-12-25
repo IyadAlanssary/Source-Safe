@@ -7,7 +7,7 @@ import "package:network_applications/models/file.dart";
 import "package:network_applications/models/folder.dart";
 import "../helpers/shared_pref_helper.dart";
 
-class GetContents extends ChangeNotifier {
+class GetFolderContents extends ChangeNotifier {
   List<MyComponent> _filesAndFolders = [];
 
   Future<List<MyComponent>> folderContentsService(int folderId) async {
@@ -23,7 +23,7 @@ class GetContents extends ChangeNotifier {
     final responseDecoded = jsonDecode(response.body);
     final List<MyFolder> loadedFolders = [];
     final List<MyComponent> loadedComponents = [];
-    List<MyFile> loadedFiles = [];
+    final List<MyFile> loadedFiles = [];
     final dataFolders = responseDecoded["data"]["folders"] as List<dynamic>;
     final dataFiles = responseDecoded["data"]["files"] as List<dynamic>;
 
