@@ -30,6 +30,7 @@ class _LogInState extends State<LogIn> {
             ),
             gapH20,
             TextField(
+              autofocus: true,
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.symmetric(
                   vertical: MediaQuery.of(context).size.height * 0.02,

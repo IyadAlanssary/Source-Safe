@@ -58,6 +58,7 @@ class _HomeState extends State<Home> {
             title: const Text('Enter Folder Name'),
             content: TextFormField(
               controller: folderTextController,
+              autofocus: true,
             ),
             actions: <Widget>[
               TextButton(
@@ -95,6 +96,7 @@ class _HomeState extends State<Home> {
             title: const Text('Enter days to check in file'),
             content: TextFormField(
               controller: fileCheckDurationController,
+              autofocus: true,
             ),
             actions: <Widget>[
               TextButton(
@@ -107,8 +109,12 @@ class _HomeState extends State<Home> {
                     } else {
                       String message = await checkInService(
                           selectedFileId, fileCheckDurationController.text);
-                      Navigator.of(context).pop();
-                      showErrorPopUp("Info", message);
+                      if (message == "File checked in successfully!") {
+                        Navigator.of(context).pop();
+                        refreshList();
+                      } else {
+                        showErrorPopUp("Info", message);
+                      }
                     }
                   }),
               TextButton(
