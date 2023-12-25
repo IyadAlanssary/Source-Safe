@@ -6,9 +6,11 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:network_applications/components/explorer.dart';
 import 'package:network_applications/screens/log_in.dart';
+import 'package:network_applications/components/projects_bar.dart';
 import 'package:network_applications/services/add_folder.dart';
 import 'package:network_applications/services/check_in.dart';
 import 'package:network_applications/services/download_file.dart';
+import 'package:network_applications/services/get_my_projects.dart';
 import 'package:network_applications/services/log_out.dart';
 import 'package:network_applications/services/upload_file.dart';
 import 'package:provider/provider.dart';
@@ -30,7 +32,9 @@ class _HomeState extends State<Home> {
       result = (await FilePicker.platform.pickFiles())!;
       PlatformFile file = result.files.first;
       List<int> bytes = file.bytes!.toList();
-      if (!await uploadFile(file.name!, bytes, 1, currentFolderId)) {
+      if (await uploadFile(file.name, bytes, 1, currentFolderId)) {
+        refreshList();
+      } else {
         showErrorPopUp("Error", "Could not upload file");
       }
     } on PlatformException catch (e) {
@@ -71,6 +75,7 @@ class _HomeState extends State<Home> {
                       if (await addFolderService(
                           folderTextController.text, 1, currentFolderId)) {
                         Navigator.of(context).pop();
+                        refreshList();
                       } else {
                         showErrorPopUp("Error", "Could not add folder");
                       }
@@ -166,64 +171,7 @@ class _HomeState extends State<Home> {
                 )
               ],
             ),
-            Row(
-              children: [
-                SizedBox(
-                  width: RenderErrorBox.minimumWidth,
-                  child: ElevatedButton(
-                    onPressed: addFolderPopUp,
-                    child: const Text('Add Folder'),
-                  ),
-                ),
-                SizedBox(
-                  width: RenderErrorBox.minimumWidth,
-                  child: ElevatedButton(
-                    onPressed: pickFile,
-                    child: const Text('Add File'),
-                  ),
-                ),
-                const Spacer(),
-                SizedBox(
-                  width: RenderErrorBox.minimumWidth,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      if (selectedFileId == -1) {
-                        showErrorPopUp("Error", "Please select a File");
-                      } else {
-                        downloadFile(selectedFileId);
-                      }
-                    },
-                    child: const Text('Download'),
-                  ),
-                ),
-                SizedBox(
-                  width: RenderErrorBox.minimumWidth,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      if (selectedFileId == -1) {
-                        showErrorPopUp("Error", "Please select a file");
-                      } else {
-                        checkInPopUp();
-                      }
-                    },
-                    child: const Text('Check In'),
-                  ),
-                ),
-                SizedBox(
-                  width: RenderErrorBox.minimumWidth,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      if (selectedFileId == -1) {
-                        showErrorPopUp("Error", "Please select a file");
-                      } else {
-                        //TODO check out
-                      }
-                    },
-                    child: const Text('Check Out'),
-                  ),
-                ),
-              ],
-            ),
+            buildButtonsRow(),
             Expanded(
                 child: ScrollConfiguration(
               behavior: ScrollConfiguration.of(context).copyWith(
@@ -236,9 +184,9 @@ class _HomeState extends State<Home> {
               ),
               child: RefreshIndicator(
                 onRefresh: () async => setState(() {
-                  _refreshList();
+                  refreshList();
                 }),
-                child: MyExplorer(folderId: currentFolderId),
+                child: const Projects(),
               ),
             ))
           ],
@@ -247,16 +195,79 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Future<void> _refreshList() async {
-    final studentController = Provider.of<GetContents>(context, listen: false);
+  Row buildButtonsRow() {
+    return Row(
+      children: [
+        SizedBox(
+          width: RenderErrorBox.minimumWidth,
+          child: ElevatedButton(
+            onPressed: addFolderPopUp,
+            child: const Text('Add Folder'),
+          ),
+        ),
+        SizedBox(
+          width: RenderErrorBox.minimumWidth,
+          child: ElevatedButton(
+            onPressed: pickFile,
+            child: const Text('Add File'),
+          ),
+        ),
+        const Spacer(),
+        SizedBox(
+          width: RenderErrorBox.minimumWidth,
+          child: ElevatedButton(
+            onPressed: () {
+              if (selectedFileId == -1) {
+                showErrorPopUp("Error", "Please select a File");
+              } else {
+                downloadFile(selectedFileId);
+              }
+            },
+            child: const Text('Download'),
+          ),
+        ),
+        SizedBox(
+          width: RenderErrorBox.minimumWidth,
+          child: ElevatedButton(
+            onPressed: () {
+              if (selectedFileId == -1) {
+                showErrorPopUp("Error", "Please select a file");
+              } else {
+                checkInPopUp();
+              }
+            },
+            child: const Text('Check In'),
+          ),
+        ),
+        SizedBox(
+          width: RenderErrorBox.minimumWidth,
+          child: ElevatedButton(
+            onPressed: () {
+              if (selectedFileId == -1) {
+                showErrorPopUp("Error", "Please select a file");
+              } else {
+                //TODO check out
+              }
+            },
+            child: const Text('Check Out'),
+          ),
+        ),
+      ],
+    );
+  }
 
-    // Fetch the updated posts
+  Future<void> refreshList() async {
+    final studentController =
+        Provider.of<GetFolderContents>(context, listen: false);
     await studentController.folderContentsService(currentFolderId);
+    studentController.getFilesAndFolders();
 
-    // Now that the posts are updated, trigger a rebuild of the widget
+    final controller = Provider.of<GetProjects>(context, listen: false);
+    await controller.getProjectsService();
+    controller.getProjectsService();
+
     setState(() {});
 
-    // Show a snack-bar or toast to inform the user that the refresh is complete
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
           backgroundColor: Colors.lightGreen,
