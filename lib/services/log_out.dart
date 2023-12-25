@@ -4,7 +4,7 @@ import "../helpers/shared_pref_helper.dart";
 
 Future<bool> logOutService() async {
   final PrefService prefService = PrefService();
-  String token = await getToken();
+  String token = await PrefService().readToken();
   final response = await http.post(
     Uri.parse("$localHostApi/logout"),
     headers: {
@@ -15,7 +15,7 @@ Future<bool> logOutService() async {
   );
   if (response.statusCode == 200) {
     print(response.body);
-    await prefService.removeCacheToken(token).whenComplete(() {
+    await prefService.removeToken().whenComplete(() {
       print('removed token');
     });
     return true;

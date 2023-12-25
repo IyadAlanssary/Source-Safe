@@ -4,7 +4,6 @@ import "package:network_applications/constants/api.dart";
 import "package:network_applications/helpers/shared_pref_helper.dart";
 
 Future<bool> checkLogIn(String username, String password) async {
-  final PrefService prefService = PrefService();
   Map<String, dynamic> request = {"username": username, "password": password};
   String jsonPayload = json.encode(request);
   final response = await http.post(Uri.parse("$localHostApi/login"),
@@ -16,7 +15,7 @@ Future<bool> checkLogIn(String username, String password) async {
   final responseDecoded = jsonDecode(response.body);
   if (response.statusCode == 200) {
     String token = responseDecoded["data"]["token"].toString();
-    prefService.createCacheToken(token);
+    PrefService().createToken(token);
     return true;
   } else {
     return false;

@@ -1,10 +1,11 @@
 import "package:network_applications/constants/api.dart";
 import 'dart:html' as html;
 
+import '../helpers/shared_pref_helper.dart';
+
 Future<void> downloadFile(int fileId) async {
   String url = "$localHostApi/files/$fileId/download";
-  String token = await getToken();
-
+  String token = await PrefService().readToken();
   html.HttpRequest request = html.HttpRequest();
   request.open('GET', url);
   request.setRequestHeader('Authorization', 'Bearer $token');

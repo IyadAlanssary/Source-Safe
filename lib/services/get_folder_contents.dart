@@ -5,12 +5,13 @@ import "package:network_applications/constants/api.dart";
 import "package:network_applications/models/component.dart";
 import "package:network_applications/models/file.dart";
 import "package:network_applications/models/folder.dart";
+import "../helpers/shared_pref_helper.dart";
 
 class GetContents extends ChangeNotifier {
   List<MyComponent> _filesAndFolders = [];
 
   Future<List<MyComponent>> folderContentsService(int folderId) async {
-    String token = await getToken();
+    String token = await PrefService().readToken();
     final response = await http.get(
       Uri.parse("$localHostApi/folders/$folderId"),
       headers: {
@@ -19,7 +20,6 @@ class GetContents extends ChangeNotifier {
         'Authorization': 'Bearer $token'
       },
     );
-
     final responseDecoded = jsonDecode(response.body);
     final List<MyFolder> loadedFolders = [];
     final List<MyComponent> loadedComponents = [];
@@ -53,7 +53,6 @@ class GetContents extends ChangeNotifier {
     _filesAndFolders = loadedComponents;
     return _filesAndFolders;
   }
-
   Future<List<MyComponent>> getFilesAndFolders() async {
     notifyListeners();
     return _filesAndFolders;

@@ -17,7 +17,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   void initState() {
-    _prefService.readCache("token").then((value) {
+    _prefService.readToken().then((value) {
       print(value.toString());
       if (value != null) {
         return Timer(const Duration(seconds: 3), () {
