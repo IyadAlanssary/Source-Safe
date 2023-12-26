@@ -4,6 +4,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:network_applications/components/explorer.dart';
 import 'package:network_applications/components/info_pop_up.dart';
 import 'package:network_applications/screens/log_in.dart';
@@ -71,14 +72,17 @@ class _HomeState extends State<Home> {
                   child: const Text('Add'),
                   onPressed: () async {
                     if (folderTextController.text.isEmpty) {
-                      infoPopUp(context, title: "Error", info: 'Please enter the folder\'s name');
+                      infoPopUp(context,
+                          title: "Error",
+                          info: 'Please enter the folder\'s name');
                     } else {
                       if (await addFolderService(
                           folderTextController.text, 1, currentFolderId)) {
                         Navigator.of(context).pop();
                         refreshList();
                       } else {
-                        infoPopUp(context, title: "Error", info: "Could not add folder");
+                        infoPopUp(context,
+                            title: "Error", info: "Could not add folder");
                       }
                     }
                   }),
@@ -93,45 +97,22 @@ class _HomeState extends State<Home> {
         });
   }
 
-  void checkInPopUp() {
-    final fileCheckDurationController = TextEditingController();
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Enter days to check in file'),
-            content: TextFormField(
-              controller: fileCheckDurationController,
-              autofocus: true,
-            ),
-            actions: <Widget>[
-              TextButton(
-                  child: const Text('Ok'),
-                  onPressed: () async {
-                    if (fileCheckDurationController.text.isEmpty ||
-                        int.tryParse(fileCheckDurationController.text) ==
-                            null) {
-                      infoPopUp(context, title: "Error", info: "Please enter a valid number");
-                    } else {
-                      String message = await checkInService(
-                          selectedFileId, fileCheckDurationController.text);
-                      if (message == "File checked in successfully!") {
-                        Navigator.of(context).pop();
-                        refreshList();
-                      } else {
-                        infoPopUp(context, title: "Error", info: message);
-                      }
-                    }
-                  }),
-              TextButton(
-                child: const Text('Cancel'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        });
+  Future<void> checkInPopUp() async {
+    final DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2023),
+      lastDate: DateTime(2025),
+    );
+    DateFormat outputFormat = DateFormat("yyyy-MM-dd");
+    String outputDateString = outputFormat.format(pickedDate!);
+    print(outputDateString);
+    var (bool checkedIn, String message) = await checkInService(selectedFileId, outputDateString);
+    if (checkedIn) {
+      refreshList();
+    } else {
+      infoPopUp(context, title: "Error", info: message);
+    }
   }
 
   @override
@@ -199,7 +180,8 @@ class _HomeState extends State<Home> {
           child: ElevatedButton(
             onPressed: () {
               if (selectedFileId == -1) {
-                infoPopUp(context, title: "Error", info: "Please select a file");
+                infoPopUp(context,
+                    title: "Error", info: "Please select a file");
               } else {
                 downloadFile(selectedFileId);
               }
@@ -212,7 +194,8 @@ class _HomeState extends State<Home> {
           child: ElevatedButton(
             onPressed: () {
               if (selectedFileId == -1) {
-                infoPopUp(context, title: "Error", info: "Please select a file");
+                infoPopUp(context,
+                    title: "Error", info: "Please select a file");
               } else {
                 checkInPopUp();
               }
@@ -225,7 +208,8 @@ class _HomeState extends State<Home> {
           child: ElevatedButton(
             onPressed: () {
               if (selectedFileId == -1) {
-                infoPopUp(context, title: "Error", info: "Please select a file");
+                infoPopUp(context,
+                    title: "Error", info: "Please select a file");
               } else {
                 //TODO check out
               }
