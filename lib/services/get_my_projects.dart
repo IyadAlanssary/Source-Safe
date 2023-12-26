@@ -31,8 +31,7 @@ class GetProjects extends ChangeNotifier {
       return [];
     }
   }
-  Future<List<Project>> getProjects() async {
+  Future<void> getProjects() async {
     notifyListeners();
-    return _projects;
   }
 }
