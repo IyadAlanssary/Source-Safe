@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:network_applications/screens/log_in.dart';
 import '../constants/sizes.dart';
-import '../services/sign_up.dart';
+import '../services/auth/sign_up.dart';
 import 'home.dart';
 
 class SignUp extends StatefulWidget {

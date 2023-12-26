@@ -1,7 +1,7 @@
 import "dart:convert";
 import "package:http/http.dart" as http;
 import "package:network_applications/constants/api.dart";
-import "../helpers/shared_pref_helper.dart";
+import '../../helpers/shared_pref_helper.dart';
 
 Future<bool> signUp(String username, String password) async {
   Map<String, dynamic> request = {"username": username, "password": password};

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:network_applications/screens/home.dart';
 import 'package:network_applications/screens/sign_up.dart';
-import 'package:network_applications/services/log_in.dart';
+import 'package:network_applications/services/auth/log_in.dart';
 import '../constants/sizes.dart';
 
 class LogIn extends StatefulWidget {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:network_applications/screens/splash_screen.dart';
+import 'package:network_applications/services/Projects/get_my_projects.dart';
 import 'package:network_applications/services/get_folder_contents.dart';
-import 'package:network_applications/services/get_my_projects.dart';
 import 'package:provider/provider.dart';
 import 'constants/theme.dart';
 

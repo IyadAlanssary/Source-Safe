@@ -1,6 +1,6 @@
 import "package:http/http.dart" as http;
 import "package:network_applications/constants/api.dart";
-import "../helpers/shared_pref_helper.dart";
+import "../../helpers/shared_pref_helper.dart";
 
 Future<bool> logOutService() async {
   final PrefService prefService = PrefService();

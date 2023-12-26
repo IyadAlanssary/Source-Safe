@@ -12,11 +12,10 @@ import 'package:network_applications/components/projects_bar.dart';
 import 'package:network_applications/services/add_folder.dart';
 import 'package:network_applications/services/check_in.dart';
 import 'package:network_applications/services/download_file.dart';
-import 'package:network_applications/services/get_my_projects.dart';
-import 'package:network_applications/services/log_out.dart';
 import 'package:network_applications/services/upload_file.dart';
 import 'package:provider/provider.dart';
-import '../services/add_project.dart';
+import '../services/Projects/get_my_projects.dart';
+import '../services/auth/log_out.dart';
 import '../services/get_folder_contents.dart';
 
 class Home extends StatefulWidget {

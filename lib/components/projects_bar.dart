@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:network_applications/services/rename_project.dart';
+import 'package:network_applications/services/Projects/rename_project.dart';
 import 'package:provider/provider.dart';
-import '../services/add_project.dart';
+import '../services/Projects/add_project.dart';
+import '../services/Projects/delete_project.dart';
 import 'explorer.dart';
 import '../models/project.dart';
-import '../services/get_my_projects.dart';
+import '../services/Projects/get_my_projects.dart';
 import 'info_pop_up.dart';
 
 class Projects extends StatefulWidget {
@@ -31,7 +32,6 @@ class _ProjectsState extends State<Projects> {
               return Row(
                 children: [
                   Drawer(
-                    width: RenderErrorBox.minimumWidth,
                     child: Column(
                       children: [
                         Expanded(
@@ -39,14 +39,24 @@ class _ProjectsState extends State<Projects> {
                             itemCount: projects.length,
                             itemBuilder: (context, index) => ListTile(
                               title: Text(projects[index].name),
-                              trailing: IconButton(
-                                      icon: const Icon(
-                                          Icons.drive_file_rename_outline),
-                                      onPressed: () {
-                                        renameProjectPopUp(
-                                            projects[index].id!);
-                                      },
-                                    ),
+                              trailing: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  IconButton(
+                                    icon: const Icon(
+                                        Icons.drive_file_rename_outline),
+                                    onPressed: () {
+                                      renameProjectPopUp(projects[index].id!);
+                                    },
+                                  ),
+                                  IconButton(
+                                    icon: const Icon(Icons.delete),
+                                    onPressed: () {
+                                      deleteProjectPopUp(projects[index].id!);
+                                    },
+                                  ),
+                                ],
+                              ),
                               onTap: () {
                                 setState(() {
                                   selectedProject = projects[index].id!;
@@ -144,6 +154,35 @@ class _ProjectsState extends State<Projects> {
                   }),
               TextButton(
                 child: const Text('Cancel'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        });
+  }
+
+  void deleteProjectPopUp(int id) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Are you sure you want to delete this project?'),
+            actions: <Widget>[
+              TextButton(
+                  child: const Text('Yes'),
+                  onPressed: () async {
+                    if (await deleteProjectService(id)) {
+                      Navigator.of(context).pop();
+                      refreshList();
+                    } else {
+                      infoPopUp(context,
+                          title: "Error", info: "Could not delete project");
+                    }
+                  }),
+              TextButton(
+                child: const Text('No'),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
