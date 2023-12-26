@@ -35,51 +35,63 @@ class _MyExplorerState extends State<MyExplorer> {
               List<MyComponent> components = snapshot.data!;
               return SizedBox(
                   child: ListView.builder(
-                itemCount: components.length,
-                itemBuilder: (context, index) => Container(
-                    color: (index == selectedItem)
-                        ? Colors.blue.withOpacity(0.5)
-                        : Colors.transparent,
-                    child: GestureDetector(
-                      onTap: () {
-                        if (selectedItem == index) {
-                          setState(() {
-                            selectedItem = -1;
-                            selectedFileId = -1;
-                            selectedFolderId = -1;
-                          });
-                        } else {
-                          setState(() {
-                            selectedItem = index;
-                            if (components[index] is MyFolder) {
-                              selectedFileId = -1;
-                              selectedFolderId = components[index].id;
-                            } else if (components[index] is MyFile) {
-                              selectedFolderId = -1;
-                              selectedFileId = components[index].id;
-                            }
-                          });
+                      itemCount: components.length,
+                      itemBuilder: (context, index) {
+                        String checkedBy = "";
+                        if (components[index] is MyFile) {
+                          MyFile file = components[index] as MyFile;
+                          checkedBy = file.checkedBy ?? "";
                         }
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Container(
-                          color: Colors.grey.shade50,
-                          height: 50,
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                          child: Row(
-                            children: [
-                              Image.asset(components[index].icon.toString()),
-                              const SizedBox(width: 10),
-                              Text(
-                                components[index].name,
+                        return Container(
+                            color: (index == selectedItem)
+                                ? Colors.blue.withOpacity(0.5)
+                                : Colors.transparent,
+                            child: GestureDetector(
+                              onTap: () {
+                                if (selectedItem == index) {
+                                  setState(() {
+                                    selectedItem = -1;
+                                    selectedFileId = -1;
+                                    selectedFolderId = -1;
+                                  });
+                                } else {
+                                  setState(() {
+                                    selectedItem = index;
+                                    if (components[index] is MyFolder) {
+                                      selectedFileId = -1;
+                                      selectedFolderId = components[index].id;
+                                    } else if (components[index] is MyFile) {
+                                      selectedFolderId = -1;
+                                      selectedFileId = components[index].id;
+                                    }
+                                  });
+                                }
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Container(
+                                  color: Colors.grey.shade50,
+                                  height: 50,
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10),
+                                  child: Row(
+                                    children: [
+                                      Image.asset(
+                                          components[index].icon.toString()),
+                                      const SizedBox(width: 10),
+                                      Text(
+                                        components[index].name,
+                                      ),
+                                      const Spacer(),
+                                      checkedBy != ""
+                                          ? Text("Checked by: $checkedBy")
+                                          : Container(),
+                                    ],
+                                  ),
+                                ),
                               ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    )).build(context),
-              ));
+                            ));
+                      }));
             }
             return const Center(child: CircularProgressIndicator());
           });
