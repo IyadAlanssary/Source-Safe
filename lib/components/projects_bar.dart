@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:network_applications/services/rename_project.dart';
 import 'package:provider/provider.dart';
 import '../services/add_project.dart';
 import 'explorer.dart';
@@ -38,6 +39,14 @@ class _ProjectsState extends State<Projects> {
                             itemCount: projects.length,
                             itemBuilder: (context, index) => ListTile(
                               title: Text(projects[index].name),
+                              trailing: IconButton(
+                                      icon: const Icon(
+                                          Icons.drive_file_rename_outline),
+                                      onPressed: () {
+                                        renameProjectPopUp(
+                                            projects[index].id!);
+                                      },
+                                    ),
                               onTap: () {
                                 setState(() {
                                   selectedProject = projects[index].id!;
@@ -46,7 +55,9 @@ class _ProjectsState extends State<Projects> {
                             ),
                           ),
                         ),
-                        IconButton(onPressed: addProjectPopUp, icon: const Icon(Icons.add))
+                        IconButton(
+                            onPressed: addProjectPopUp,
+                            icon: const Icon(Icons.add))
                       ],
                     ),
                   ),
@@ -79,13 +90,55 @@ class _ProjectsState extends State<Projects> {
                   child: const Text('Add'),
                   onPressed: () async {
                     if (projectTextController.text.isEmpty) {
-                      infoPopUp(context, title: "Error", info: "Please Enter Project's name");
+                      infoPopUp(context,
+                          title: "Error", info: "Please Enter Project's name");
                     } else {
                       if (await addProjectService(projectTextController.text)) {
                         Navigator.of(context).pop();
                         refreshList();
                       } else {
-                        infoPopUp(context, title: "Error", info: "Could not add project");
+                        infoPopUp(context,
+                            title: "Error", info: "Could not add project");
+                      }
+                    }
+                  }),
+              TextButton(
+                child: const Text('Cancel'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        });
+  }
+
+  void renameProjectPopUp(int id) {
+    final projectTextController = TextEditingController();
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Enter Project Name'),
+            content: TextFormField(
+              controller: projectTextController,
+              autofocus: true,
+            ),
+            actions: <Widget>[
+              TextButton(
+                  child: const Text('Rename'),
+                  onPressed: () async {
+                    if (projectTextController.text.isEmpty) {
+                      infoPopUp(context,
+                          title: "Error", info: "Please Enter Project's name");
+                    } else {
+                      if (await renameProjectService(
+                          id, projectTextController.text)) {
+                        Navigator.of(context).pop();
+                        refreshList();
+                      } else {
+                        infoPopUp(context,
+                            title: "Error", info: "Could not rename project");
                       }
                     }
                   }),
