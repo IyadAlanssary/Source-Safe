@@ -18,6 +18,8 @@ import '../services/Projects/get_my_projects.dart';
 import '../services/auth/log_out.dart';
 import '../services/get_folder_contents.dart';
 
+import '../services/check_out.dart';
+
 class Home extends StatefulWidget {
   const Home({super.key});
 
@@ -28,6 +30,25 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   late FilePickerResult result;
   int currentFolderId = 1;
+
+  void checkOutFile(int id) async {
+    try {
+      result = (await FilePicker.platform.pickFiles())!;
+      PlatformFile file = result.files.first;
+      List<int> bytes = file.bytes!.toList();
+      print("File picked");
+      if (await checkOut(id, bytes, file.name)) {
+        infoPopUp(context, title: "Done", info: "Checked out successfully");
+        refreshList();
+      } else {
+        infoPopUp(context, title: "Error", info: "Could not upload file");
+      }
+    } on PlatformException catch (e) {
+      log('Unsupported operation$e');
+    } catch (e) {
+      log(e.toString());
+    }
+  }
 
   void pickFile() async {
     try {
@@ -106,7 +127,8 @@ class _HomeState extends State<Home> {
     DateFormat outputFormat = DateFormat("yyyy-MM-dd");
     String outputDateString = outputFormat.format(pickedDate!);
     print(outputDateString);
-    var (bool checkedIn, String message) = await checkInService(selectedFileId, outputDateString);
+    var (bool checkedIn, String message) =
+        await checkInService(selectedFileId, outputDateString);
     if (checkedIn) {
       refreshList();
     } else {
@@ -210,7 +232,8 @@ class _HomeState extends State<Home> {
                 infoPopUp(context,
                     title: "Error", info: "Please select a file");
               } else {
-                //TODO check out
+                checkOutFile(selectedFileId);
+                print("Button clicked");
               }
             },
             child: const Text('Check Out'),
