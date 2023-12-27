@@ -11,6 +11,6 @@ class MyFile extends MyComponent {
     required super.folderId,
     required super.createdAt,
     required super.updatedAt,
-    this.checkedBy,
+    required this.checkedBy,
   });
 }

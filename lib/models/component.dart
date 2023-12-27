@@ -7,11 +7,12 @@ abstract class MyComponent {
   String createdAt;
   String updatedAt;
 
-  MyComponent(
-      {required this.id,
-      required this.name,
-      required this.projectId,
-      required this.folderId,
-      required this.createdAt,
-      required this.updatedAt});
+  MyComponent({
+    required this.id,
+    required this.name,
+    required this.projectId,
+    required this.folderId,
+    required this.createdAt,
+    required this.updatedAt,
+  });
 }

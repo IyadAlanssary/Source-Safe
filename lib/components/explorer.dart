@@ -8,6 +8,7 @@ import '../services/get_folder_contents.dart';
 
 int selectedFileId = -1;
 int selectedFolderId = -1;
+List<int> selectedForCheckIn = [];
 
 class MyExplorer extends StatefulWidget {
   final int folderId;
@@ -76,6 +77,35 @@ class _MyExplorerState extends State<MyExplorer> {
                                       horizontal: 10),
                                   child: Row(
                                     children: [
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            if (selectedForCheckIn.contains(
+                                                components[index].id)) {
+                                              setState(() {
+                                                selectedForCheckIn.remove(
+                                                    components[index].id);
+                                                print(selectedForCheckIn);
+                                              });
+                                            } else {
+                                              setState(() {
+                                                selectedForCheckIn
+                                                    .add(components[index].id);
+                                                print(selectedForCheckIn);
+                                              });
+                                            }
+                                          },
+                                          child: Container(
+                                            width: 10,
+                                            height: 10,
+                                            color: (selectedForCheckIn.contains(
+                                                    components[index].id))
+                                                ? Colors.green
+                                                : Colors.grey,
+                                          ),
+                                        ),
+                                      ),
                                       Image.asset(
                                           components[index].icon.toString()),
                                       const SizedBox(width: 10),

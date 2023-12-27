@@ -128,7 +128,7 @@ class _HomeState extends State<Home> {
     String outputDateString = outputFormat.format(pickedDate!);
     print(outputDateString);
     var (bool checkedIn, String message) =
-        await checkInService(selectedFileId, outputDateString);
+        await checkInService(selectedForCheckIn, outputDateString);
     if (checkedIn) {
       refreshList();
     } else {
@@ -147,10 +147,13 @@ class _HomeState extends State<Home> {
               children: [
                 const Text('Source Safe', style: TextStyle(fontSize: 36)),
                 const Spacer(),
-                SizedBox(
-                  width: RenderErrorBox.minimumWidth,
-                  child: ElevatedButton(
-                      onPressed: logOut, child: const Text("Log Out")),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: SizedBox(
+                    width: RenderErrorBox.minimumWidth,
+                    child: ElevatedButton(
+                        onPressed: logOut, child: const Text("Log Out")),
+                  ),
                 )
               ],
             ),
@@ -181,62 +184,94 @@ class _HomeState extends State<Home> {
   Row buildButtonsRow() {
     return Row(
       children: [
-        SizedBox(
-          width: RenderErrorBox.minimumWidth,
-          child: ElevatedButton(
-            onPressed: addFolderPopUp,
-            child: const Text('Add Folder'),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: SizedBox(
+            width: RenderErrorBox.minimumWidth,
+            child: ElevatedButton(
+              onPressed: addFolderPopUp,
+              child: const Text('Add Folder'),
+            ),
           ),
         ),
-        SizedBox(
-          width: RenderErrorBox.minimumWidth,
-          child: ElevatedButton(
-            onPressed: pickFile,
-            child: const Text('Add File'),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: SizedBox(
+            width: RenderErrorBox.minimumWidth,
+            child: ElevatedButton(
+              onPressed: pickFile,
+              child: const Text('Add File'),
+            ),
           ),
         ),
         const Spacer(),
-        SizedBox(
-          width: RenderErrorBox.minimumWidth,
-          child: ElevatedButton(
-            onPressed: () {
-              if (selectedFileId == -1) {
-                infoPopUp(context,
-                    title: "Error", info: "Please select a file");
-              } else {
-                downloadFile(selectedFileId);
-              }
-            },
-            child: const Text('Download'),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: SizedBox(
+            width: RenderErrorBox.minimumWidth,
+            child: ElevatedButton(
+              onPressed: () {
+                if (selectedFileId == -1) {
+                  infoPopUp(context,
+                      title: "Error", info: "Please select a file");
+                } else {
+                  downloadFile(selectedFileId);
+                }
+              },
+              child: const Text('Download'),
+            ),
           ),
         ),
-        SizedBox(
-          width: RenderErrorBox.minimumWidth,
-          child: ElevatedButton(
-            onPressed: () {
-              if (selectedFileId == -1) {
-                infoPopUp(context,
-                    title: "Error", info: "Please select a file");
-              } else {
-                checkInPopUp();
-              }
-            },
-            child: const Text('Check In'),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: SizedBox(
+            width: RenderErrorBox.minimumWidth,
+            child: ElevatedButton(
+              onPressed: () {
+                if (selectedFileId == -1) {
+                  infoPopUp(context,
+                      title: "Error", info: "Please select a file");
+                } else {
+                  //  downloadFile(selectedFileId);
+                }
+              },
+              child: const Text('Delete'),
+            ),
           ),
         ),
-        SizedBox(
-          width: RenderErrorBox.minimumWidth,
-          child: ElevatedButton(
-            onPressed: () {
-              if (selectedFileId == -1) {
-                infoPopUp(context,
-                    title: "Error", info: "Please select a file");
-              } else {
-                checkOutFile(selectedFileId);
-                print("Button clicked");
-              }
-            },
-            child: const Text('Check Out'),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: SizedBox(
+            width: RenderErrorBox.minimumWidth,
+            child: ElevatedButton(
+              onPressed: () {
+                if (selectedFileId == -1) {
+                  infoPopUp(context,
+                      title: "Error", info: "Please select a file");
+                } else {
+                  checkInPopUp();
+                }
+              },
+              child: const Text('Check In'),
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: SizedBox(
+            width: RenderErrorBox.minimumWidth,
+            child: ElevatedButton(
+              onPressed: () {
+                if (selectedFileId == -1) {
+                  infoPopUp(context,
+                      title: "Error", info: "Please select a file");
+                } else {
+                  checkOutFile(selectedFileId);
+                  print("Button clicked");
+                }
+              },
+              child: const Text('Check Out'),
+            ),
           ),
         ),
       ],
