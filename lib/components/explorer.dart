@@ -97,8 +97,8 @@ class _MyExplorerState extends State<MyExplorer> {
                                             }
                                           },
                                           child: Container(
-                                            width: 10,
-                                            height: 10,
+                                            width: 20,
+                                            height: 20,
                                             color: (selectedForCheckIn.contains(
                                                     components[index].id))
                                                 ? Colors.green

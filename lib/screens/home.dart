@@ -7,10 +7,12 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:network_applications/components/explorer.dart';
 import 'package:network_applications/components/info_pop_up.dart';
+import 'package:network_applications/constants/colors.dart';
 import 'package:network_applications/screens/log_in.dart';
 import 'package:network_applications/components/projects_bar.dart';
 import 'package:network_applications/services/add_folder.dart';
 import 'package:network_applications/services/check_in.dart';
+import 'package:network_applications/services/delete_file.dart';
 import 'package:network_applications/services/download_file.dart';
 import 'package:network_applications/services/upload_file.dart';
 import 'package:provider/provider.dart';
@@ -59,6 +61,20 @@ class _HomeState extends State<Home> {
         refreshList();
       } else {
         infoPopUp(context, title: "Error", info: "Could not upload file");
+      }
+    } on PlatformException catch (e) {
+      log('Unsupported operation$e');
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
+  void deleteFile() async {
+    try {
+      if (await deleteFileService(selectedFileId)) {
+        refreshList();
+      } else {
+        infoPopUp(context, title: "Error", info: "Could not delete file");
       }
     } on PlatformException catch (e) {
       log('Unsupported operation$e');
@@ -232,7 +248,7 @@ class _HomeState extends State<Home> {
                   infoPopUp(context,
                       title: "Error", info: "Please select a file");
                 } else {
-                  //  downloadFile(selectedFileId);
+                  deleteFile();
                 }
               },
               child: const Text('Delete'),
@@ -292,7 +308,7 @@ class _HomeState extends State<Home> {
 
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-          backgroundColor: Colors.lightGreen,
+          backgroundColor: primary,
           content: Text(
             "Updated",
             //    style: StylesManager.medium16White(),

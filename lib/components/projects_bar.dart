@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:network_applications/constants/colors.dart';
 import 'package:network_applications/services/Projects/rename_project.dart';
 import 'package:provider/provider.dart';
 import '../services/Projects/add_project.dart';
@@ -205,7 +206,7 @@ class _ProjectsState extends State<Projects> {
 
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-          backgroundColor: Colors.lightGreen,
+          backgroundColor: primary,
           content: Text(
             "Updated",
             //    style: StylesManager.medium16White(),
