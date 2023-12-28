@@ -31,7 +31,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   late FilePickerResult result;
-  int currentFolderId = 1;
+  // int currentFolderId = 1;
 
   void checkOutFile(int id) async {
     try {

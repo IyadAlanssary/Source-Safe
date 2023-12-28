@@ -73,7 +73,8 @@ class _ProjectsState extends State<Projects> {
                     ),
                   ),
                   Expanded(
-                    child: MyExplorer(folderId: 1, projectId: selectedProject),
+                    child: MyExplorer(
+                        folderId: currentFolderId, projectId: selectedProject),
                   ),
                 ],
               );
