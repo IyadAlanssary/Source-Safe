@@ -3,6 +3,7 @@ import 'package:flutter/rendering.dart';
 import 'package:network_applications/constants/sizes.dart';
 import 'package:network_applications/models/user.dart';
 import 'package:network_applications/services/Projects/get_project_users.dart';
+import 'package:network_applications/constants/colors.dart';
 import 'package:network_applications/services/Projects/rename_project.dart';
 import 'package:provider/provider.dart';
 import '../services/Projects/add_project.dart';
@@ -87,7 +88,8 @@ class _ProjectsState extends State<Projects> {
                     ),
                   ),
                   Expanded(
-                    child: MyExplorer(folderId: 1, projectId: selectedProject),
+                    child: MyExplorer(
+                        folderId: currentFolderId, projectId: selectedProject),
                   ),
                 ],
               );
@@ -257,7 +259,7 @@ class _ProjectsState extends State<Projects> {
 
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-          backgroundColor: Colors.lightGreen,
+          backgroundColor: primary,
           content: Text(
             "Updated",
             //    style: StylesManager.medium16White(),

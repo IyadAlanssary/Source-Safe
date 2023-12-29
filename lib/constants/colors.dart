@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-const primary = Color(0xFFA63A30);
+const primary = Color(0xFF33CCCC);
 
 const lightColorScheme = ColorScheme(
   brightness: Brightness.light,
-  primary: Color(0xFF6ABC4D),
+  primary: Color(0xFF33CCCC),
   onPrimary: Color(0xFFFFFFFF),
   primaryContainer: Color(0xFFFFDAD5),
   onPrimaryContainer: Color(0xFF410001),
@@ -35,7 +35,6 @@ const lightColorScheme = ColorScheme(
   outlineVariant: Color(0xFFD6C3B7),
   scrim: Color(0xFF000000),
 );
-
 
 const darkColorScheme = ColorScheme(
   brightness: Brightness.dark,
