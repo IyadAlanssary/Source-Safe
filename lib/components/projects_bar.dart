@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:network_applications/constants/sizes.dart';
+import 'package:network_applications/models/user.dart';
+import 'package:network_applications/services/Projects/get_project_users.dart';
 import 'package:network_applications/services/Projects/rename_project.dart';
 import 'package:provider/provider.dart';
 import '../services/Projects/add_project.dart';
@@ -18,6 +21,11 @@ class Projects extends StatefulWidget {
 
 class _ProjectsState extends State<Projects> {
   int selectedProject = 1;
+  bool switchStateBottom = true;
+
+  void switchProjectIdFun(int value) {
+    selectedProject = value;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +45,7 @@ class _ProjectsState extends State<Projects> {
                         Expanded(
                           child: ListView.builder(
                             itemCount: projects.length,
-                            itemBuilder: (context, index) => ListTile(
+                            itemBuilder: (context, index) => ExpansionTile(
                               title: Text(projects[index].name),
                               trailing: Row(
                                 mainAxisSize: MainAxisSize.min,
@@ -55,13 +63,20 @@ class _ProjectsState extends State<Projects> {
                                       deleteProjectPopUp(projects[index].id!);
                                     },
                                   ),
+                                  IconButton(
+                                    icon: const Icon(Icons.person),
+                                    onPressed: () {
+                                      addUsersDialog(id: projects[index].id!);
+                                    },
+                                  ),
                                 ],
                               ),
-                              onTap: () {
+                              onExpansionChanged: (bool expand) {
                                 setState(() {
-                                  selectedProject = projects[index].id!;
+                                  switchProjectIdFun(projects[index].id!);
                                 });
                               },
+                              children: [usersDialog(id: projects[index].id!)],
                             ),
                           ),
                         ),
@@ -121,6 +136,43 @@ class _ProjectsState extends State<Projects> {
             ],
           );
         });
+  }
+
+  Widget usersDialog({required int id}) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+        child: Consumer<GetProjectUsers>(
+          builder: (context, componentController, child) {
+            return FutureBuilder<List<User>>(
+              future: componentController.getProjectUsersService(id),
+              builder:
+                  (BuildContext context, AsyncSnapshot<List<User>> snapshot) {
+                if (snapshot.hasData) {
+                  List<User> users = snapshot.data!;
+                  return Expanded(
+                    child: ListView.builder(
+                      scrollDirection: Axis.vertical,
+                      shrinkWrap: true,
+                      itemCount: users.length,
+                      itemBuilder: (context, index) {
+                        return ListTile(
+                          leading: Icon(Icons.person_2),
+                          title: Text(users[index].username),
+                          onTap: () => {},
+                        );
+                      },
+                    ),
+                  );
+                } else {
+                  return const Center(child: CircularProgressIndicator());
+                }
+              },
+            );
+          },
+        ),
+      ),
+    );
   }
 
   void renameProjectPopUp(int id) {
@@ -210,6 +262,66 @@ class _ProjectsState extends State<Projects> {
             "Updated",
             //    style: StylesManager.medium16White(),
           )),
+    );
+  }
+  //still under construction
+
+  void addUsersDialog({required int id}) {
+    final projectUsersTextController = TextEditingController();
+    showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Container(
+            width: MediaQuery.sizeOf(context).width / 2,
+            height: MediaQuery.sizeOf(context).height / 2,
+            child: Column(
+              children: [
+                TextField(
+                  controller: projectUsersTextController,
+                  decoration: const InputDecoration(
+                    hintText: "Search for an user to add ",
+                  ),
+                ),
+                gapH12,
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Consumer<GetProjectUsers>(
+                    builder: (context, componentController, child) {
+                      return FutureBuilder<List<User>>(
+                        future: componentController.getProjectUsersService(id),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<List<User>> snapshot) {
+                          if (snapshot.hasData) {
+                            List<User> users = snapshot.data!;
+                            return Expanded(
+                              child: ListView.builder(
+                                scrollDirection: Axis.vertical,
+                                shrinkWrap: true,
+                                itemCount: users.length,
+                                itemBuilder: (context, index) {
+                                  return ListTile(
+                                    leading: Icon(Icons.person_2),
+                                    title: Text(users[index].username),
+                                    onTap: () => {},
+                                  );
+                                },
+                              ),
+                            );
+                          } else {
+                            return const Center(
+                                child: CircularProgressIndicator());
+                          }
+                        },
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }
