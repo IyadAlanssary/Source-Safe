@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:network_applications/constants/sizes.dart';
 import 'package:network_applications/models/user.dart';
-import 'package:network_applications/services/Projects/get_project_users.dart';
+import 'package:network_applications/services/Users/add_user.dart';
+import 'package:network_applications/services/Users/delete_user.dart';
+import 'package:network_applications/services/Users/get_project_users.dart';
 import 'package:network_applications/constants/colors.dart';
 import 'package:network_applications/services/Projects/rename_project.dart';
+import 'package:network_applications/services/Users/search_for_users.dart';
 import 'package:provider/provider.dart';
 import '../services/Projects/add_project.dart';
 import '../services/Projects/delete_project.dart';
@@ -67,7 +70,13 @@ class _ProjectsState extends State<Projects> {
                                   IconButton(
                                     icon: const Icon(Icons.person),
                                     onPressed: () {
-                                      addUsersDialog(id: projects[index].id!);
+                                      // Navigator.push(
+                                      //   context,
+                                      //   MaterialPageRoute(
+                                      //       builder: (context) => UsersDialog(id: projects[index].id!)),
+                                      // );
+                                      addUsersDialog(
+                                          projectId: projects[index].id!);
                                     },
                                   ),
                                 ],
@@ -77,7 +86,9 @@ class _ProjectsState extends State<Projects> {
                                   switchProjectIdFun(projects[index].id!);
                                 });
                               },
-                              children: [usersDialog(id: projects[index].id!)],
+                              children: [
+                                usersDialog(projectId: projects[index].id!)
+                              ],
                             ),
                           ),
                         ),
@@ -140,31 +151,42 @@ class _ProjectsState extends State<Projects> {
         });
   }
 
-  Widget usersDialog({required int id}) {
+  Widget usersDialog({required int projectId}) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(2.0),
       child: Container(
         child: Consumer<GetProjectUsers>(
           builder: (context, componentController, child) {
             return FutureBuilder<List<User>>(
-              future: componentController.getProjectUsersService(id),
+              future: componentController.getProjectUsersService(projectId),
               builder:
                   (BuildContext context, AsyncSnapshot<List<User>> snapshot) {
                 if (snapshot.hasData) {
                   List<User> users = snapshot.data!;
-                  return Expanded(
-                    child: ListView.builder(
-                      scrollDirection: Axis.vertical,
-                      shrinkWrap: true,
-                      itemCount: users.length,
-                      itemBuilder: (context, index) {
-                        return ListTile(
-                          leading: Icon(Icons.person_2),
-                          title: Text(users[index].username),
-                          onTap: () => {},
-                        );
-                      },
-                    ),
+                  return ListView.builder(
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    itemCount: users.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        leading: Icon(Icons.person_2),
+                        title: Text(users[index].username),
+                        onTap: () => {},
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.person_remove_rounded),
+                              onPressed: () async {
+                                await deleteUserService(
+                                    projectId, users[index].id, context)? 
+                                  refreshUserList(projectId):null;
+                              },
+                            ),
+                          ],
+                        ),
+                      );
+                    },
                   );
                 } else {
                   return const Center(child: CircularProgressIndicator());
@@ -254,7 +276,6 @@ class _ProjectsState extends State<Projects> {
     final controller = Provider.of<GetProjects>(context, listen: false);
     await controller.getProjectsService();
     controller.getProjectsService();
-
     setState(() {});
 
     ScaffoldMessenger.of(context).showSnackBar(
@@ -266,60 +287,128 @@ class _ProjectsState extends State<Projects> {
           )),
     );
   }
-  //still under construction
 
-  void addUsersDialog({required int id}) {
-    final projectUsersTextController = TextEditingController();
+  Future<void> refreshUserList(int id) async {
+    final usersController =
+        Provider.of<GetProjectUsers>(context, listen: false);
+    await usersController.getProjectUsersService(id);
+    usersController.getProjectUsersService(id);
+    setState(() {});
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+          backgroundColor: primary,
+          content: Text(
+            "Updated",
+          )),
+    );
+  }
+
+  void addUsersDialog({required int projectId}) {
+    bool showList = true;
+    var projectUsersTextController = TextEditingController();
+    int useId;
+    void setControllerValue(var controller ){
+      projectUsersTextController=controller;
+    }
     showDialog<void>(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          content: Container(
-            width: MediaQuery.sizeOf(context).width / 2,
-            height: MediaQuery.sizeOf(context).height / 2,
-            child: Column(
-              children: [
-                TextField(
-                  controller: projectUsersTextController,
-                  decoration: const InputDecoration(
-                    hintText: "Search for an user to add ",
+        return StatefulBuilder(
+          
+          builder: (context, StateSetter setState) => AlertDialog(
+            alignment: Alignment(-0.5,0.2),
+            content: Container(
+
+              width: MediaQuery.sizeOf(context).width / 4,
+              height: (MediaQuery.sizeOf(context).height*3.2)/4,
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        width: MediaQuery.sizeOf(context).width / 4,
+                        child: TextField(
+                          
+                          controller: projectUsersTextController,
+                          decoration: const InputDecoration(
+                            icon: Icon(Icons.search,color:primary,weight: 10.0),
+                            hintText: "Search for an user to add ",
+                          ),
+                          onChanged: (text) {
+                            setState((){
+                              setControllerValue(projectUsersTextController);
+                              showList = false;
+                            });
+                              
+
+                          }, 
+                        ),
+                      ),
+                      // IconButton(
+                      //     onPressed:
+                      //     icon: const Icon(Icons.search))
+                    ],
                   ),
-                ),
-                gapH12,
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Consumer<GetProjectUsers>(
-                    builder: (context, componentController, child) {
-                      return FutureBuilder<List<User>>(
-                        future: componentController.getProjectUsersService(id),
-                        builder: (BuildContext context,
-                            AsyncSnapshot<List<User>> snapshot) {
-                          if (snapshot.hasData) {
-                            List<User> users = snapshot.data!;
-                            return Expanded(
-                              child: ListView.builder(
-                                scrollDirection: Axis.vertical,
-                                shrinkWrap: true,
-                                itemCount: users.length,
-                                itemBuilder: (context, index) {
-                                  return ListTile(
-                                    leading: Icon(Icons.person_2),
-                                    title: Text(users[index].username),
-                                    onTap: () => {},
-                                  );
+                  gapH16,
+                  showList
+                      ? const Text(" Search For Users")
+                      : Expanded(
+                        child: Consumer<SearchForUsers>(
+                            builder: (context, componentController, child) {
+                              return FutureBuilder<List<User>>(
+                                future:
+                                    componentController.getSearchForUsersServvice(
+                                        projectUsersTextController.text),
+                                builder: (BuildContext context,
+                                    AsyncSnapshot<List<User>> snapshot) {
+                                  if (snapshot.hasData) {
+                                    List<User> users = snapshot.data!;
+                                    return ListView.builder(
+                                      scrollDirection: Axis.vertical,
+                                      shrinkWrap: true,
+                                      itemCount: users.length,
+                                      itemBuilder: (context, index) {
+                                        return ListTile(
+                                          leading: Icon(Icons.person_2),
+                                          title: Text(users[index].username),
+                                          onTap: () => {
+                                            setState(
+                                              () {
+                                                useId = users[index].id;
+                                              },
+                                            ),
+                                          },
+                                          enabled: true,
+                                          trailing: Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              IconButton(
+                                                icon: const Icon(
+                                                    Icons.person_add_alt_rounded),
+                                                onPressed: () async{
+                                                   await addUserService(projectId,
+                                                      users[index].id, context)?
+                                                    refreshUserList(projectId):null;
+                                                  
+                                                },
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  } else {
+                                    return const Center(
+                                        child: CircularProgressIndicator());
+                                  }
                                 },
-                              ),
-                            );
-                          } else {
-                            return const Center(
-                                child: CircularProgressIndicator());
-                          }
-                        },
-                      );
-                    },
-                  ),
-                ),
-              ],
+                              );
+                            },
+                          ),
+                      ),
+                ],
+              ),
             ),
           ),
         );
