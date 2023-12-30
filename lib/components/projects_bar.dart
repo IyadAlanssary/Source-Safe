@@ -294,6 +294,7 @@ class _ProjectsState extends State<Projects> {
     await usersController.getProjectUsersService(id);
     usersController.getProjectUsersService(id);
     setState(() {});
+    // ignore: use_build_context_synchronously
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
           backgroundColor: primary,
@@ -306,7 +307,6 @@ class _ProjectsState extends State<Projects> {
   void addUsersDialog({required int projectId}) {
     bool showList = true;
     var projectUsersTextController = TextEditingController();
-    int useId;
     void setControllerValue(var controller ){
       projectUsersTextController=controller;
     }
@@ -345,9 +345,6 @@ class _ProjectsState extends State<Projects> {
                           }, 
                         ),
                       ),
-                      // IconButton(
-                      //     onPressed:
-                      //     icon: const Icon(Icons.search))
                     ],
                   ),
                   gapH16,
@@ -375,7 +372,6 @@ class _ProjectsState extends State<Projects> {
                                           onTap: () => {
                                             setState(
                                               () {
-                                                useId = users[index].id;
                                               },
                                             ),
                                           },
