@@ -378,7 +378,7 @@ class _ProjectsState extends State<Projects> {
                                       itemCount: users.length,
                                       itemBuilder: (context, index) {
                                         return ListTile(
-                                          leading: Icon(Icons.person_2),
+                                          leading: const Icon(Icons.person_2),
                                           title: Text(users[index].username),
                                           onTap: () => {
                                             setState(

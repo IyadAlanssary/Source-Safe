@@ -238,23 +238,6 @@ class _HomeState extends State<Home> {
                   infoPopUp(context,
                       title: "Error", info: "Please select a file");
                 } else {
-                  downloadFile(selectedFileId);
-                }
-              },
-              child: const Text('Download'),
-            ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: SizedBox(
-            width: RenderErrorBox.minimumWidth,
-            child: ElevatedButton(
-              onPressed: () {
-                if (selectedFileId == -1) {
-                  infoPopUp(context,
-                      title: "Error", info: "Please select a file");
-                } else {
                   deleteFile();
                 }
               },
