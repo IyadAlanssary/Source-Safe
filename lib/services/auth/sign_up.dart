@@ -15,7 +15,8 @@ Future<bool> signUp(String username, String password) async {
   final responseDecoded = jsonDecode(response.body);
   if (response.statusCode == 201) {
     String token = responseDecoded["data"]["token"].toString();
-    PrefService().createToken(token);
+    String userName = responseDecoded["data"]["user"]["username"].toString();
+    PrefService().createTokenAndUserName(token, userName);
     return true;
   } else {
     return false;

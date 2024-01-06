@@ -1,15 +1,22 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PrefService {
-  Future createToken(String token) async {
+  Future createTokenAndUserName(String token, String userName) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.setString("token", token);
+    preferences.setString("user", userName);
   }
 
   Future readToken() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    var cache = preferences.getString("token");
-    return cache;
+    var tok = preferences.getString("token");
+    return tok;
+  }
+
+  Future readUserName() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    var user = preferences.getString("user");
+    return user;
   }
 
   Future removeToken() async {
