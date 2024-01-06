@@ -1,9 +1,8 @@
 import "package:network_applications/constants/api.dart";
 import 'dart:html' as html;
-
 import '../helpers/shared_pref_helper.dart';
 
-Future<void> downloadFile(int fileId) async {
+Future<void> downloadFile(int fileId, String fileName) async {
   String url = "$localHostApi/files/$fileId/download";
   String token = await PrefService().readToken();
   html.HttpRequest request = html.HttpRequest();
@@ -12,17 +11,9 @@ Future<void> downloadFile(int fileId) async {
   request.responseType = 'blob';
 
   request.onLoad.listen((event) {
-    var contentDisposition = request.responseHeaders['content-disposition'];
-    print('Content-Disposition: $contentDisposition');
-    String? header = request.getResponseHeader('Content-Disposition');
-    print('Content-Disposition: $header');
-
-    String? fileName = header?.split(';')[1].split('=')[1].replaceAll('"', '');
-
     html.AnchorElement anchorElement = html.AnchorElement(
         href: html.Url.createObjectUrlFromBlob(request.response));
     print(request.status);
-
     anchorElement.download = fileName;
     anchorElement.click();
   });
