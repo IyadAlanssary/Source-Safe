@@ -1,11 +1,23 @@
 import 'dart:collection';
+import 'dart:developer';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:network_applications/models/component.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../constants/colors.dart';
+import '../helpers/shared_pref_helper.dart';
 import '../models/file.dart';
 import '../models/folder.dart';
+import '../services/Projects/get_my_projects.dart';
+import '../services/check_in.dart';
+import '../services/check_out.dart';
+import '../services/delete_file.dart';
 import '../services/download_file.dart';
 import '../services/get_folder_contents.dart';
+import 'info_pop_up.dart';
 
 int selectedFileId = -1;
 String selectedFileName = "";
@@ -24,6 +36,17 @@ class MyExplorer extends StatefulWidget {
 
 class _MyExplorerState extends State<MyExplorer> {
   int selectedItem = -1;
+  String userName = "";
+
+  @override
+  void initState() {
+    getUserName();
+    super.initState();
+  }
+
+  Future<void> getUserName() async {
+    userName = await PrefService().readUserName();
+  }
 
   void goBack() {
     selectedForCheckIn.clear();
@@ -154,13 +177,55 @@ class _MyExplorerState extends State<MyExplorer> {
                                             components[index].name,
                                           ),
                                           const Spacer(),
-                                          isFile == true
+                                          isFile
                                               ? IconButton(
                                                   onPressed: () {
-                                                    downloadFile(selectedFileId, selectedFileName);
+                                                    downloadFile(
+                                                        components[index].id,
+                                                        components[index].name);
                                                   },
                                                   icon: const Icon(
                                                       Icons.arrow_downward))
+                                              : Container(),
+                                          isFile
+                                              ? IconButton(
+                                                  onPressed: () async {
+                                                    if (await deleteFileService(
+                                                        components[index].id)) {
+                                                      refreshList();
+                                                    } else {
+                                                      infoPopUp(context,
+                                                          title: "Error",
+                                                          info:
+                                                              "Could not delete file");
+                                                    }
+                                                  },
+                                                  icon:
+                                                      const Icon(Icons.delete))
+                                              : Container(),
+                                          (isFile && checkedBy == "")
+                                              ? IconButton(
+                                                  onPressed: () {
+                                                    selectedForCheckIn.clear();
+                                                    selectedForCheckIn.add(
+                                                        components[index].id);
+                                                    setState(() {});
+                                                    checkInPopUp();
+                                                  },
+                                                  icon: const Icon(Icons.check))
+                                              : Container(),
+                                          (isFile && checkedBy == userName)
+                                              ? IconButton(
+                                                  onPressed: () {
+                                                    selectedForCheckIn.clear();
+                                                    selectedForCheckIn.add(
+                                                        components[index].id);
+                                                    setState(() {});
+                                                    checkOutFile(
+                                                        components[index].id);
+                                                  },
+                                                  icon: const Icon(Icons
+                                                      .indeterminate_check_box))
                                               : Container(),
                                           checkedBy != ""
                                               ? Text("Checked by: $checkedBy")
@@ -177,5 +242,61 @@ class _MyExplorerState extends State<MyExplorer> {
             return const Center(child: CircularProgressIndicator());
           });
     });
+  }
+
+  void checkOutFile(int id) async {
+    late FilePickerResult result;
+    try {
+      result = (await FilePicker.platform.pickFiles())!;
+      PlatformFile file = result.files.first;
+      List<int> bytes = file.bytes!.toList();
+      print("File picked");
+      if (await checkOut(id, bytes, file.name)) {
+        infoPopUp(context, title: "Done", info: "Checked out successfully");
+        refreshList();
+      } else {
+        infoPopUp(context, title: "Error", info: "Could not upload file");
+      }
+    } on PlatformException catch (e) {
+      log('Unsupported operation$e');
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
+  Future<void> checkInPopUp() async {
+    final DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2023),
+      lastDate: DateTime(2025),
+    );
+    DateFormat outputFormat = DateFormat("yyyy-MM-dd");
+    String outputDateString = outputFormat.format(pickedDate!);
+    var (bool checkedIn, String message) =
+        await checkInService(selectedForCheckIn, outputDateString);
+    if (checkedIn) {
+      refreshList();
+    } else {
+      infoPopUp(context, title: "Error", info: message);
+    }
+  }
+
+  Future<void> refreshList() async {
+    final folderCtrl = Provider.of<GetFolderContents>(context, listen: false);
+    await folderCtrl.folderContentsService(currentFolderId);
+    folderCtrl.getFilesAndFolders();
+
+    final projectCtrl = Provider.of<GetProjects>(context, listen: false);
+    await projectCtrl.getProjectsService();
+    projectCtrl.getProjectsService();
+    setState(() {});
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+          backgroundColor: primary,
+          content: Text(
+            "Updated",
+          )),
+    );
   }
 }

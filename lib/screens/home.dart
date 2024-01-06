@@ -13,7 +13,6 @@ import 'package:network_applications/components/projects_bar.dart';
 import 'package:network_applications/services/add_folder.dart';
 import 'package:network_applications/services/check_in.dart';
 import 'package:network_applications/services/delete_file.dart';
-import 'package:network_applications/services/download_file.dart';
 import 'package:network_applications/services/upload_file.dart';
 import 'package:provider/provider.dart';
 import '../services/Projects/get_my_projects.dart';
@@ -29,9 +28,9 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  late FilePickerResult result;
 
   void checkOutFile(int id) async {
+    late FilePickerResult result;
     try {
       result = (await FilePicker.platform.pickFiles())!;
       PlatformFile file = result.files.first;
@@ -51,11 +50,13 @@ class _HomeState extends State<Home> {
   }
 
   void pickFile() async {
+    late FilePickerResult result;
     try {
       result = (await FilePicker.platform.pickFiles())!;
       PlatformFile file = result.files.first;
       List<int> bytes = file.bytes!.toList();
-      if (await uploadFile(file.name, bytes, selectedProject, currentFolderId)) {
+      if (await uploadFile(
+          file.name, bytes, selectedProject, currentFolderId)) {
         refreshList();
       } else {
         infoPopUp(context, title: "Error", info: "Could not upload file");
@@ -238,23 +239,6 @@ class _HomeState extends State<Home> {
                   infoPopUp(context,
                       title: "Error", info: "Please select a file");
                 } else {
-                  deleteFile();
-                }
-              },
-              child: const Text('Delete'),
-            ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: SizedBox(
-            width: RenderErrorBox.minimumWidth,
-            child: ElevatedButton(
-              onPressed: () {
-                if (selectedFileId == -1) {
-                  infoPopUp(context,
-                      title: "Error", info: "Please select a file");
-                } else {
                   checkInPopUp();
                 }
               },
@@ -285,23 +269,19 @@ class _HomeState extends State<Home> {
   }
 
   Future<void> refreshList() async {
-    final studentController =
-        Provider.of<GetFolderContents>(context, listen: false);
-    await studentController.folderContentsService(currentFolderId);
-    studentController.getFilesAndFolders();
+    final folderCtrl = Provider.of<GetFolderContents>(context, listen: false);
+    await folderCtrl.folderContentsService(currentFolderId);
+    folderCtrl.getFilesAndFolders();
 
-    final controller = Provider.of<GetProjects>(context, listen: false);
-    await controller.getProjectsService();
-    controller.getProjectsService();
-
+    final projectCtrl = Provider.of<GetProjects>(context, listen: false);
+    await projectCtrl.getProjectsService();
+    projectCtrl.getProjectsService();
     setState(() {});
-
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
           backgroundColor: primary,
           content: Text(
             "Updated",
-            //    style: StylesManager.medium16White(),
           )),
     );
   }
