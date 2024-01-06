@@ -19,7 +19,6 @@ import 'package:provider/provider.dart';
 import '../services/Projects/get_my_projects.dart';
 import '../services/auth/log_out.dart';
 import '../services/get_folder_contents.dart';
-
 import '../services/check_out.dart';
 
 class Home extends StatefulWidget {
@@ -31,7 +30,6 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   late FilePickerResult result;
-  // int currentFolderId = 1;
 
   void checkOutFile(int id) async {
     try {
@@ -57,7 +55,7 @@ class _HomeState extends State<Home> {
       result = (await FilePicker.platform.pickFiles())!;
       PlatformFile file = result.files.first;
       List<int> bytes = file.bytes!.toList();
-      if (await uploadFile(file.name, bytes, 1, currentFolderId)) {
+      if (await uploadFile(file.name, bytes, selectedProject, currentFolderId)) {
         refreshList();
       } else {
         infoPopUp(context, title: "Error", info: "Could not upload file");
@@ -111,9 +109,12 @@ class _HomeState extends State<Home> {
                       infoPopUp(context,
                           title: "Error",
                           info: 'Please enter the folder\'s name');
+                    } else if (selectedProject == -1) {
+                      infoPopUp(context,
+                          title: "Error", info: 'Please select a project');
                     } else {
-                      if (await addFolderService(
-                          folderTextController.text, 1, currentFolderId)) {
+                      if (await addFolderService(folderTextController.text,
+                          selectedProject, currentFolderId)) {
                         Navigator.of(context).pop();
                         refreshList();
                       } else {
@@ -142,7 +143,6 @@ class _HomeState extends State<Home> {
     );
     DateFormat outputFormat = DateFormat("yyyy-MM-dd");
     String outputDateString = outputFormat.format(pickedDate!);
-    print(outputDateString);
     var (bool checkedIn, String message) =
         await checkInService(selectedForCheckIn, outputDateString);
     if (checkedIn) {
@@ -215,7 +215,14 @@ class _HomeState extends State<Home> {
           child: SizedBox(
             width: RenderErrorBox.minimumWidth,
             child: ElevatedButton(
-              onPressed: pickFile,
+              onPressed: () {
+                if (selectedProject == -1) {
+                  infoPopUp(context,
+                      title: "Error", info: 'Please select a project');
+                } else {
+                  pickFile();
+                }
+              },
               child: const Text('Add File'),
             ),
           ),

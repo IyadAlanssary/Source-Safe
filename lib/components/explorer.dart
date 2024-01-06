@@ -1,25 +1,21 @@
 import 'dart:collection';
-
 import 'package:flutter/material.dart';
 import 'package:network_applications/models/component.dart';
 import 'package:provider/provider.dart';
-
 import '../models/file.dart';
 import '../models/folder.dart';
 import '../services/get_folder_contents.dart';
 
 int selectedFileId = -1;
+String selectedFileName = "";
 int selectedFolderId = -1;
-int currentFolderId = 1;
+int currentFolderId = -1;
 List<int> selectedForCheckIn = [];
 Queue<int> foldersQueue = Queue<int>();
 int parentFolderId = 0;
 
 class MyExplorer extends StatefulWidget {
-  int folderId;
-  final int projectId;
-
-  MyExplorer({super.key, required this.folderId, required this.projectId});
+  const MyExplorer({super.key});
 
   @override
   State<MyExplorer> createState() => _MyExplorerState();
@@ -32,7 +28,6 @@ class _MyExplorerState extends State<MyExplorer> {
     setState(() {
       parentFolderId = foldersQueue.removeLast();
       currentFolderId = parentFolderId;
-      widget.folderId = currentFolderId;
     });
     print('currentFolderId = $currentFolderId');
   }
@@ -42,7 +37,7 @@ class _MyExplorerState extends State<MyExplorer> {
     return Consumer<GetFolderContents>(
         builder: (context, componentController, child) {
       return FutureBuilder<List<MyComponent>>(
-          future: componentController.folderContentsService(widget.folderId),
+          future: componentController.folderContentsService(currentFolderId),
           builder: (BuildContext context,
               AsyncSnapshot<List<MyComponent>> snapshot) {
             if (snapshot.hasData) {
@@ -53,7 +48,7 @@ class _MyExplorerState extends State<MyExplorer> {
                       onTap: () {
                         goBack();
                       },
-                      child: Align(
+                      child: const Align(
                           alignment: Alignment.centerLeft,
                           child: Icon(Icons.arrow_back))),
                   SizedBox(
@@ -74,12 +69,10 @@ class _MyExplorerState extends State<MyExplorer> {
                                   onDoubleTap: () {
                                     if (components[index] is MyFolder) {
                                       setState(() {
-                                        widget.folderId = components[index].id;
                                         currentFolderId = components[index].id;
                                         //  parentFolderId = components[index].id;
                                         foldersQueue
                                             .add(components[index].folderId);
-
                                         print(parentFolderId);
                                         print(
                                             'currentFolderId = $currentFolderId');
@@ -104,6 +97,7 @@ class _MyExplorerState extends State<MyExplorer> {
                                             is MyFile) {
                                           selectedFolderId = -1;
                                           selectedFileId = components[index].id;
+                                          selectedFileName = components[index].name;
                                         }
                                       });
                                     }

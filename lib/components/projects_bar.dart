@@ -16,6 +16,8 @@ import '../models/project.dart';
 import '../services/Projects/get_my_projects.dart';
 import 'info_pop_up.dart';
 
+int selectedProject = -1;
+
 class Projects extends StatefulWidget {
   const Projects({super.key});
 
@@ -24,12 +26,7 @@ class Projects extends StatefulWidget {
 }
 
 class _ProjectsState extends State<Projects> {
-  int selectedProject = 1;
-  bool switchStateBottom = true;
-
-  void switchProjectIdFun(int value) {
-    selectedProject = value;
-  }
+  // int selectedExpansion = -1;
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +38,10 @@ class _ProjectsState extends State<Projects> {
               (BuildContext context, AsyncSnapshot<List<Project>> snapshot) {
             if (snapshot.hasData) {
               List<Project> projects = snapshot.data!;
+              // List<ExpansionTileController> controllers = List.generate(
+              //   projects.length,
+              //   (index) => ExpansionTileController(),
+              // );
               return Row(
                 children: [
                   Drawer(
@@ -70,20 +71,33 @@ class _ProjectsState extends State<Projects> {
                                   IconButton(
                                     icon: const Icon(Icons.person),
                                     onPressed: () {
-                                      // Navigator.push(
-                                      //   context,
-                                      //   MaterialPageRoute(
-                                      //       builder: (context) => UsersDialog(id: projects[index].id!)),
-                                      // );
                                       addUsersDialog(
                                           projectId: projects[index].id!);
                                     },
                                   ),
                                 ],
                               ),
+                              // controller: controllers[index],
                               onExpansionChanged: (bool expand) {
+                                // print("expanded no. ${controllers[index]}");
+                                // print("expanded no. ${controllers[index].isExpanded}");
                                 setState(() {
-                                  switchProjectIdFun(projects[index].id!);
+                                  if (expand) {
+                                    // selectedExpansion = index;
+                                    // for (int i = 0; i < controllers.length; i++) {
+                                    //   if (i != selectedExpansion) {
+                                    //     print("i $i");
+                                    //     controllers[i].collapse();
+                                    //   }
+                                    // }
+                                    selectedProject = projects[index].id!;
+                                    currentFolderId =
+                                        projects[index].rootFolderId!;
+                                    refreshList();
+                                  } else {
+                                    selectedProject = -1;
+                                    currentFolderId = -1;
+                                  }
                                 });
                               },
                               children: [
@@ -99,8 +113,9 @@ class _ProjectsState extends State<Projects> {
                     ),
                   ),
                   Expanded(
-                    child: MyExplorer(
-                        folderId: currentFolderId, projectId: selectedProject),
+                    child: (selectedProject == -1)
+                        ? const Center(child: Text("Select a project"))
+                        : const MyExplorer(),
                   ),
                 ],
               );
@@ -154,47 +169,46 @@ class _ProjectsState extends State<Projects> {
   Widget usersDialog({required int projectId}) {
     return Padding(
       padding: const EdgeInsets.all(2.0),
-      child: Container(
-        child: Consumer<GetProjectUsers>(
-          builder: (context, componentController, child) {
-            return FutureBuilder<List<User>>(
-              future: componentController.getProjectUsersService(projectId),
-              builder:
-                  (BuildContext context, AsyncSnapshot<List<User>> snapshot) {
-                if (snapshot.hasData) {
-                  List<User> users = snapshot.data!;
-                  return ListView.builder(
-                    scrollDirection: Axis.vertical,
-                    shrinkWrap: true,
-                    itemCount: users.length,
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                        leading: Icon(Icons.person_2),
-                        title: Text(users[index].username),
-                        onTap: () => {},
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            IconButton(
-                              icon: const Icon(Icons.person_remove_rounded),
-                              onPressed: () async {
-                                await deleteUserService(
-                                    projectId, users[index].id, context)? 
-                                  refreshUserList(projectId):null;
-                              },
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  );
-                } else {
-                  return const Center(child: CircularProgressIndicator());
-                }
-              },
-            );
-          },
-        ),
+      child: Consumer<GetProjectUsers>(
+        builder: (context, componentController, child) {
+          return FutureBuilder<List<User>>(
+            future: componentController.getProjectUsersService(projectId),
+            builder:
+                (BuildContext context, AsyncSnapshot<List<User>> snapshot) {
+              if (snapshot.hasData) {
+                List<User> users = snapshot.data!;
+                return ListView.builder(
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                  itemCount: users.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      leading: const Icon(Icons.person_2),
+                      title: Text(users[index].username),
+                      onTap: () => {},
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            icon: const Icon(Icons.person_remove_rounded),
+                            onPressed: () async {
+                              await deleteUserService(
+                                      projectId, users[index].id, context)
+                                  ? refreshUserList(projectId)
+                                  : null;
+                            },
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                );
+              } else {
+                return const Center(child: CircularProgressIndicator());
+              }
+            },
+          );
+        },
       ),
     );
   }
@@ -307,20 +321,19 @@ class _ProjectsState extends State<Projects> {
   void addUsersDialog({required int projectId}) {
     bool showList = true;
     var projectUsersTextController = TextEditingController();
-    void setControllerValue(var controller ){
-      projectUsersTextController=controller;
+    void setControllerValue(var controller) {
+      projectUsersTextController = controller;
     }
+
     showDialog<void>(
       context: context,
       builder: (BuildContext context) {
         return StatefulBuilder(
-          
           builder: (context, StateSetter setState) => AlertDialog(
-            alignment: Alignment(-0.5,0.2),
+            alignment: Alignment(-0.5, 0.2),
             content: Container(
-
               width: MediaQuery.sizeOf(context).width / 4,
-              height: (MediaQuery.sizeOf(context).height*3.2)/4,
+              height: (MediaQuery.sizeOf(context).height * 3.2) / 4,
               child: Column(
                 children: [
                   Row(
@@ -329,20 +342,18 @@ class _ProjectsState extends State<Projects> {
                       Container(
                         width: MediaQuery.sizeOf(context).width / 4,
                         child: TextField(
-                          
                           controller: projectUsersTextController,
                           decoration: const InputDecoration(
-                            icon: Icon(Icons.search,color:primary,weight: 10.0),
-                            hintText: "Search for an user to add ",
+                            icon: Icon(Icons.search,
+                                color: primary, weight: 10.0),
+                            hintText: "Search for a user to add ",
                           ),
                           onChanged: (text) {
-                            setState((){
+                            setState(() {
                               setControllerValue(projectUsersTextController);
                               showList = false;
                             });
-                              
-
-                          }, 
+                          },
                         ),
                       ),
                     ],
@@ -351,11 +362,11 @@ class _ProjectsState extends State<Projects> {
                   showList
                       ? const Text(" Search For Users")
                       : Expanded(
-                        child: Consumer<SearchForUsers>(
+                          child: Consumer<SearchForUsers>(
                             builder: (context, componentController, child) {
                               return FutureBuilder<List<User>>(
-                                future:
-                                    componentController.getSearchForUsersServvice(
+                                future: componentController
+                                    .getSearchForUsersServvice(
                                         projectUsersTextController.text),
                                 builder: (BuildContext context,
                                     AsyncSnapshot<List<User>> snapshot) {
@@ -371,8 +382,7 @@ class _ProjectsState extends State<Projects> {
                                           title: Text(users[index].username),
                                           onTap: () => {
                                             setState(
-                                              () {
-                                              },
+                                              () {},
                                             ),
                                           },
                                           enabled: true,
@@ -380,13 +390,16 @@ class _ProjectsState extends State<Projects> {
                                             mainAxisSize: MainAxisSize.min,
                                             children: [
                                               IconButton(
-                                                icon: const Icon(
-                                                    Icons.person_add_alt_rounded),
-                                                onPressed: () async{
-                                                   await addUserService(projectId,
-                                                      users[index].id, context)?
-                                                    refreshUserList(projectId):null;
-                                                  
+                                                icon: const Icon(Icons
+                                                    .person_add_alt_rounded),
+                                                onPressed: () async {
+                                                  await addUserService(
+                                                          projectId,
+                                                          users[index].id,
+                                                          context)
+                                                      ? refreshUserList(
+                                                          projectId)
+                                                      : null;
                                                 },
                                               ),
                                             ],
@@ -402,7 +415,7 @@ class _ProjectsState extends State<Projects> {
                               );
                             },
                           ),
-                      ),
+                        ),
                 ],
               ),
             ),
