@@ -23,8 +23,9 @@ class MyExplorer extends StatefulWidget {
 
 class _MyExplorerState extends State<MyExplorer> {
   int selectedItem = -1;
+
   void goBack() {
-    print('button working');
+    selectedForCheckIn.clear();
     setState(() {
       parentFolderId = foldersQueue.removeLast();
       currentFolderId = parentFolderId;
@@ -45,9 +46,7 @@ class _MyExplorerState extends State<MyExplorer> {
               return Column(
                 children: [
                   GestureDetector(
-                      onTap: () {
-                        goBack();
-                      },
+                      onTap: goBack,
                       child: const Align(
                           alignment: Alignment.centerLeft,
                           child: Icon(Icons.arrow_back))),
@@ -68,6 +67,7 @@ class _MyExplorerState extends State<MyExplorer> {
                                 child: GestureDetector(
                                   onDoubleTap: () {
                                     if (components[index] is MyFolder) {
+                                      selectedForCheckIn.clear();
                                       setState(() {
                                         currentFolderId = components[index].id;
                                         //  parentFolderId = components[index].id;
