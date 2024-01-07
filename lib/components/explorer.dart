@@ -188,7 +188,7 @@ class _MyExplorerState extends State<MyExplorer> {
                                                   },
                                                   icon: const Icon(
                                                       Icons.arrow_downward))
-                                              : Container(),
+                                              : const SizedBox(width: 25,),
                                           isFile
                                               ? IconButton(
                                                   onPressed: () async {
@@ -220,6 +220,16 @@ class _MyExplorerState extends State<MyExplorer> {
                                                   },
                                                   icon:
                                                       const Icon(Icons.delete))
+                                              : Container(),
+                                          !isFile
+                                              ? IconButton(
+                                                  icon: const Icon(Icons
+                                                      .drive_file_rename_outline),
+                                                  onPressed: () {
+                                                    renameFolderPopUp(
+                                                        components[index].id);
+                                                  },
+                                                )
                                               : Container(),
                                           (isFile && checkedBy == "")
                                               ? IconButton(
@@ -298,6 +308,46 @@ class _MyExplorerState extends State<MyExplorer> {
     } else {
       infoPopUp(context, title: "Error", info: message);
     }
+  }
+
+  void renameFolderPopUp(int id) {
+    final folderTextController = TextEditingController();
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Enter Folder Name'),
+            content: TextFormField(
+              controller: folderTextController,
+              autofocus: true,
+            ),
+            actions: <Widget>[
+              TextButton(
+                  child: const Text('Rename'),
+                  onPressed: () async {
+                    if (folderTextController.text.isEmpty) {
+                      infoPopUp(context,
+                          title: "Error", info: "Please Enter Folder's name");
+                    } else {
+                      if (await renameFolderService(
+                          id, folderTextController.text)) {
+                        Navigator.of(context).pop();
+                        refreshList();
+                      } else {
+                        infoPopUp(context,
+                            title: "Error", info: "Could not rename folder");
+                      }
+                    }
+                  }),
+              TextButton(
+                child: const Text('Cancel'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        });
   }
 
   Future<void> refreshList() async {

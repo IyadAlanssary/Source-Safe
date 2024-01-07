@@ -4,7 +4,7 @@ import 'package:http_parser/http_parser.dart';
 import '../helpers/shared_pref_helper.dart';
 
 Future<bool> uploadFile(
-    String fileName, List<int> bytes, int projectId, int folderId) async {
+    String fileName, List<int> bytes, int folderId) async {
   String token = await PrefService().readToken();
   var url = Uri.parse("$localHostApi/files/upload");
   var request = http.MultipartRequest("POST", url);
