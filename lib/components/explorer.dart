@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:network_applications/models/component.dart';
+import 'package:network_applications/services/rename_folder.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../constants/colors.dart';
@@ -15,6 +16,7 @@ import '../services/Projects/get_my_projects.dart';
 import '../services/check_in.dart';
 import '../services/check_out.dart';
 import '../services/delete_file.dart';
+import '../services/delete_folder.dart';
 import '../services/download_file.dart';
 import '../services/get_folder_contents.dart';
 import 'info_pop_up.dart';
@@ -198,6 +200,22 @@ class _MyExplorerState extends State<MyExplorer> {
                                                           title: "Error",
                                                           info:
                                                               "Could not delete file");
+                                                    }
+                                                  },
+                                                  icon:
+                                                      const Icon(Icons.delete))
+                                              : Container(),
+                                          !isFile
+                                              ? IconButton(
+                                                  onPressed: () async {
+                                                    if (await deleteFolderService(
+                                                        components[index].id)) {
+                                                      refreshList();
+                                                    } else {
+                                                      infoPopUp(context,
+                                                          title: "Error",
+                                                          info:
+                                                              "Could not delete folder");
                                                     }
                                                   },
                                                   icon:

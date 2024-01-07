@@ -28,7 +28,6 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-
   void checkOutFile(int id) async {
     late FilePickerResult result;
     try {
@@ -55,25 +54,10 @@ class _HomeState extends State<Home> {
       result = (await FilePicker.platform.pickFiles())!;
       PlatformFile file = result.files.first;
       List<int> bytes = file.bytes!.toList();
-      if (await uploadFile(
-          file.name, bytes, selectedProject, currentFolderId)) {
+      if (await uploadFile(file.name, bytes, currentFolderId)) {
         refreshList();
       } else {
         infoPopUp(context, title: "Error", info: "Could not upload file");
-      }
-    } on PlatformException catch (e) {
-      log('Unsupported operation$e');
-    } catch (e) {
-      log(e.toString());
-    }
-  }
-
-  void deleteFile() async {
-    try {
-      if (await deleteFileService(selectedFileId)) {
-        refreshList();
-      } else {
-        infoPopUp(context, title: "Error", info: "Could not delete file");
       }
     } on PlatformException catch (e) {
       log('Unsupported operation$e');
