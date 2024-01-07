@@ -7,8 +7,7 @@ Future<bool> addFolderService(
     String folderName, int projectId, int folderId) async {
   Map<String, dynamic> request = {
     "name": folderName,
-    "projectID": projectId,
-    "folderID": folderId
+    "parent_folder_id": folderId
   };
   String token = await PrefService().readToken();
   String jsonPayload = json.encode(request);

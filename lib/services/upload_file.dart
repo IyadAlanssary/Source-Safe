@@ -11,8 +11,7 @@ Future<bool> uploadFile(
   request.headers['Authorization'] = 'Bearer $token';
   request.headers['Accept'] = 'application/json';
   request.fields['filename'] = fileName;
-  request.fields['projectID'] = projectId.toString();
-  request.fields['folderID'] = folderId.toString();
+  request.fields['parent_folder_id'] = folderId.toString();
   request.files.add(http.MultipartFile.fromBytes("file", bytes,
       filename: fileName, contentType: MediaType('*', '*')));
   final response = await request.send();
