@@ -12,7 +12,7 @@ class SearchForUsers extends ChangeNotifier {
     print(name);
     String token = await PrefService().readToken();
     final response = await http.get(
-      Uri.parse("$localHostApi/searchUsers/$name"),
+      Uri.parse("$localHostApi/users/search/$name"),
       headers: {
         "Content-Type": "application/json",
         "Accept": "application/json",
