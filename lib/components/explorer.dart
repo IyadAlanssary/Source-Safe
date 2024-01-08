@@ -96,6 +96,7 @@ class _MyExplorerState extends State<MyExplorer> {
                               checkedBy = file.checkedBy ?? "";
                             }
                             return Container(
+
                                 color: (selectedForCheckIn
                                         .contains(components[index].id))
                                     ? Colors.blue.withOpacity(0.5)
@@ -464,6 +465,7 @@ class _MyExplorerState extends State<MyExplorer> {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
           backgroundColor: primary,
+          duration: Duration(milliseconds: 700),
           content: Text(
             "Updated",
           )),

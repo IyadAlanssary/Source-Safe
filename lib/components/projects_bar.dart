@@ -26,7 +26,6 @@ class Projects extends StatefulWidget {
 }
 
 class _ProjectsState extends State<Projects> {
-  // int selectedExpansion = -1;
 
   @override
   Widget build(BuildContext context) {
@@ -38,13 +37,10 @@ class _ProjectsState extends State<Projects> {
               (BuildContext context, AsyncSnapshot<List<Project>> snapshot) {
             if (snapshot.hasData) {
               List<Project> projects = snapshot.data!;
-              // List<ExpansionTileController> controllers = List.generate(
-              //   projects.length,
-              //   (index) => ExpansionTileController(),
-              // );
               return Row(
                 children: [
                   Drawer(
+                    backgroundColor: const Color(0xffffda94),
                     child: Column(
                       children: [
                         const SizedBox(
@@ -82,19 +78,9 @@ class _ProjectsState extends State<Projects> {
                                   ),
                                 ],
                               ),
-                              // controller: controllers[index],
                               onExpansionChanged: (bool expand) {
-                                // print("expanded no. ${controllers[index]}");
-                                // print("expanded no. ${controllers[index].isExpanded}");
                                 setState(() {
                                   if (expand) {
-                                    // selectedExpansion = index;
-                                    // for (int i = 0; i < controllers.length; i++) {
-                                    //   if (i != selectedExpansion) {
-                                    //     print("i $i");
-                                    //     controllers[i].collapse();
-                                    //   }
-                                    // }
                                     selectedProject = projects[index].id!;
                                     currentFolderId =
                                         projects[index].rootFolderId!;
@@ -310,9 +296,9 @@ class _ProjectsState extends State<Projects> {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
           backgroundColor: primary,
+          duration: Duration(milliseconds: 700),
           content: Text(
             "Updated",
-            //    style: StylesManager.medium16White(),
           )),
     );
   }
@@ -327,6 +313,7 @@ class _ProjectsState extends State<Projects> {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
           backgroundColor: primary,
+          duration: Duration(milliseconds: 700),
           content: Text(
             "Updated",
           )),

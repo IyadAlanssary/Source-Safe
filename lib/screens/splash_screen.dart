@@ -26,7 +26,7 @@ class _SplashScreenState extends State<SplashScreen>
       duration: const Duration(seconds: 2),
     )..repeat();
     _animation = Tween<double>(
-      begin: -50,
+      begin: -35,
       end: 0,
     ).animate(_controller);
 
