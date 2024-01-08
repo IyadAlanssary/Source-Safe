@@ -28,14 +28,75 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  void checkOutFile(int id) async {
+  Future<void> checkInPopUp(List<int> list) async {
+    final DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2023),
+      lastDate: DateTime(2025),
+    );
+    DateFormat outputFormat = DateFormat("yyyy-MM-dd");
+    String outputDateString = outputFormat.format(pickedDate!);
+    var (bool checkedIn, String message) =
+        await checkInService(list, outputDateString);
+    if (checkedIn) {
+      infoPopUp(context, title: "Done", info: "Checked in successfully");
+      selectedForCheckIn.clear();
+      refreshList();
+    } else {
+      infoPopUp(context, title: "Error", info: message);
+    }
+  }
+
+  void _showDialogCheckOut(BuildContext context, List<int> list1) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Do you want to upload a File?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                // Handle 'Yes' button tap
+                checkOutFileWithFile(list1);
+                Navigator.of(context).pop();
+                // Add your 'Yes' button logic here
+              },
+              child: Text('Yes'),
+            ),
+            TextButton(
+              onPressed: () async {
+                // Handle 'No' button tap
+                checkOutNoFile(list1);
+                Navigator.of(context).pop();
+                // Add your 'No' button logic here
+              },
+              child: Text('No'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void checkOutNoFile(List<int> list1) async {
+    if (await checkOut(list1)) {
+      infoPopUp(context, title: "Done", info: "Checked out successfully");
+      selectedForCheckIn.clear();
+      refreshList();
+    } else {
+      infoPopUp(context, title: "Error", info: "Something went wrong");
+    }
+  }
+
+  Future<void> checkOutFileWithFile(List<int> list) async {
     late FilePickerResult result;
     try {
       result = (await FilePicker.platform.pickFiles())!;
       PlatformFile file = result.files.first;
       List<int> bytes = file.bytes!.toList();
-      print("File picked");
-      if (await checkOut(id, bytes, file.name)) {
+
+      if (await checkOut(list, bytes, file.name)) {
         infoPopUp(context, title: "Done", info: "Checked out successfully");
         refreshList();
       } else {
@@ -45,6 +106,20 @@ class _HomeState extends State<Home> {
       log('Unsupported operation$e');
     } catch (e) {
       log(e.toString());
+    }
+  }
+
+  Future<void> checkOutFile(List<int> list) async {
+    if (list.length > 1) {
+      if (await checkOut(list)) {
+        infoPopUp(context, title: "Done", info: "Checked out successfully");
+        selectedForCheckIn.clear();
+        refreshList();
+      } else {
+        infoPopUp(context, title: "Error", info: "Something went wrong");
+      }
+    } else {
+      _showDialogCheckOut(context, list);
     }
   }
 
@@ -117,24 +192,6 @@ class _HomeState extends State<Home> {
             ],
           );
         });
-  }
-
-  Future<void> checkInPopUp() async {
-    final DateTime? pickedDate = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2023),
-      lastDate: DateTime(2025),
-    );
-    DateFormat outputFormat = DateFormat("yyyy-MM-dd");
-    String outputDateString = outputFormat.format(pickedDate!);
-    var (bool checkedIn, String message) =
-        await checkInService(selectedForCheckIn, outputDateString);
-    if (checkedIn) {
-      refreshList();
-    } else {
-      infoPopUp(context, title: "Error", info: message);
-    }
   }
 
   @override
@@ -225,7 +282,9 @@ class _HomeState extends State<Home> {
                   infoPopUp(context,
                       title: "Error", info: "Please select a file");
                 } else {
-                  checkInPopUp();
+                  List<int> checkinTemp = [];
+                  checkinTemp.addAll(selectedForCheckIn);
+                  checkInPopUp(checkinTemp);
                 }
               },
               child: const Text('Check In'),
@@ -238,12 +297,13 @@ class _HomeState extends State<Home> {
             width: RenderErrorBox.minimumWidth,
             child: ElevatedButton(
               onPressed: () {
-                if (selectedFileId == -1) {
+                if (selectedForCheckIn.isEmpty) {
                   infoPopUp(context,
                       title: "Error", info: "Please select a file");
                 } else {
-                  checkOutFile(selectedFileId);
-                  print("Button clicked");
+                  List<int> outTemp = [];
+                  outTemp.addAll(selectedForCheckIn);
+                  checkOutFile(outTemp);
                 }
               },
               child: const Text('Check Out'),

@@ -12,6 +12,7 @@ import '../constants/colors.dart';
 import '../helpers/shared_pref_helper.dart';
 import '../models/file.dart';
 import '../models/folder.dart';
+import '../screens/home.dart';
 import '../services/Projects/get_my_projects.dart';
 import '../services/check_in.dart';
 import '../services/check_out.dart';
@@ -28,6 +29,7 @@ int currentFolderId = -1;
 List<int> selectedForCheckIn = [];
 Queue<int> foldersQueue = Queue<int>();
 int parentFolderId = 0;
+List<int> checkoutTemp = [];
 
 class MyExplorer extends StatefulWidget {
   const MyExplorer({super.key});
@@ -94,7 +96,8 @@ class _MyExplorerState extends State<MyExplorer> {
                               checkedBy = file.checkedBy ?? "";
                             }
                             return Container(
-                                color: (index == selectedItem)
+                                color: (selectedForCheckIn
+                                        .contains(components[index].id))
                                     ? Colors.blue.withOpacity(0.5)
                                     : Colors.transparent,
                                 child: GestureDetector(
@@ -129,6 +132,14 @@ class _MyExplorerState extends State<MyExplorer> {
                                         } else if (components[index]
                                             is MyFile) {
                                           selectedFolderId = -1;
+                                          if (selectedForCheckIn
+                                              .contains(components[index].id)) {
+                                            selectedForCheckIn.clear();
+                                            selectedForCheckIn
+                                                .add(components[index].id);
+                                          }
+                                          selectedForCheckIn
+                                              .add(components[index].id);
                                           selectedFileId = components[index].id;
                                           selectedFileName =
                                               components[index].name;
@@ -166,22 +177,26 @@ class _MyExplorerState extends State<MyExplorer> {
                                                   });
                                                 }
                                               },
-                                              child: Container(
-                                                width: 20,
-                                                height: 20,
-                                                color: (selectedForCheckIn
-                                                        .contains(
-                                                            components[index]
-                                                                .id))
-                                                    ? Colors.green
-                                                    : Colors.grey,
-                                              ),
+                                              child:
+                                                  (components[index] is MyFile)
+                                                      ? Container(
+                                                          width: 20,
+                                                          height: 20,
+                                                          color: (selectedForCheckIn
+                                                                  .contains(
+                                                                      components[
+                                                                              index]
+                                                                          .id))
+                                                              ? Colors.green
+                                                              : Colors.grey,
+                                                        )
+                                                      : SizedBox(),
                                             ),
                                           ),
-                                          Image.asset(components[index].icon.toString(),
+                                          Image.asset(
+                                            components[index].icon.toString(),
                                             width: 35,
                                           ),
-
                                           const SizedBox(width: 10),
                                           Text(
                                             components[index].name,
@@ -260,9 +275,16 @@ class _MyExplorerState extends State<MyExplorer> {
                                                     selectedForCheckIn.clear();
                                                     selectedForCheckIn.add(
                                                         components[index].id);
-                                                    setState(() {});
-                                                    checkOutFile(
-                                                        components[index].id);
+                                                    print(selectedForCheckIn);
+                                                    checkoutTemp.addAll(
+                                                        selectedForCheckIn);
+                                                    _showDialogCheckOut(
+                                                        context, checkoutTemp);
+                                                    //      checkOutFile(checkoutTemp);
+                                                    setState(() {
+                                                      selectedForCheckIn
+                                                          .clear();
+                                                    });
                                                   },
                                                   icon: const Icon(Icons
                                                       .indeterminate_check_box))
@@ -286,14 +308,14 @@ class _MyExplorerState extends State<MyExplorer> {
     });
   }
 
-  void checkOutFile(int id) async {
+/*  void checkOutFile(List<int> list) async {
     late FilePickerResult result;
     try {
       result = (await FilePicker.platform.pickFiles())!;
       PlatformFile file = result.files.first;
       List<int> bytes = file.bytes!.toList();
-      print("File picked");
-      if (await checkOut(id, bytes, file.name)) {
+
+      if (await checkOut(checkoutTemp, bytes, file.name)) {
         infoPopUp(context, title: "Done", info: "Checked out successfully");
         refreshList();
       } else {
@@ -304,7 +326,7 @@ class _MyExplorerState extends State<MyExplorer> {
     } catch (e) {
       log(e.toString());
     }
-  }
+  }*/
 
   Future<void> checkInPopUp() async {
     final DateTime? pickedDate = await showDatePicker(
@@ -318,7 +340,12 @@ class _MyExplorerState extends State<MyExplorer> {
     var (bool checkedIn, String message) =
         await checkInService(selectedForCheckIn, outputDateString);
     if (checkedIn) {
+      setState(() {
+        selectedForCheckIn.clear();
+      });
+
       refreshList();
+      print(selectedForCheckIn);
     } else {
       infoPopUp(context, title: "Error", info: message);
     }
@@ -362,6 +389,67 @@ class _MyExplorerState extends State<MyExplorer> {
             ],
           );
         });
+  }
+
+  void _showDialogCheckOut(BuildContext context, List<int> list1) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Do you want to upload a File?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                // Handle 'Yes' button tap
+                checkOutFileWithFile(list1);
+                Navigator.of(context).pop();
+                // Add your 'Yes' button logic here
+              },
+              child: Text('Yes'),
+            ),
+            TextButton(
+              onPressed: () async {
+                // Handle 'No' button tap
+                checkOutNoFile(list1);
+                Navigator.of(context).pop();
+                // Add your 'No' button logic here
+              },
+              child: Text('No'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void checkOutNoFile(List<int> list1) async {
+    if (await checkOut(list1)) {
+      infoPopUp(context, title: "Done", info: "Checked out successfully");
+      selectedForCheckIn.clear();
+      refreshList();
+    } else {
+      infoPopUp(context, title: "Error", info: "Something went wrong");
+    }
+  }
+
+  Future<void> checkOutFileWithFile(List<int> list) async {
+    late FilePickerResult result;
+    try {
+      result = (await FilePicker.platform.pickFiles())!;
+      PlatformFile file = result.files.first;
+      List<int> bytes = file.bytes!.toList();
+
+      if (await checkOut(list, bytes, file.name)) {
+        infoPopUp(context, title: "Done", info: "Checked out successfully");
+        refreshList();
+      } else {
+        infoPopUp(context, title: "Error", info: "Could not upload file");
+      }
+    } on PlatformException catch (e) {
+      log('Unsupported operation$e');
+    } catch (e) {
+      log(e.toString());
+    }
   }
 
   Future<void> refreshList() async {
