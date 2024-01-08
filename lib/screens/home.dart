@@ -10,6 +10,7 @@ import 'package:network_applications/components/info_pop_up.dart';
 import 'package:network_applications/constants/colors.dart';
 import 'package:network_applications/screens/log_in.dart';
 import 'package:network_applications/components/projects_bar.dart';
+import 'package:network_applications/services/Users/user_report.dart';
 import 'package:network_applications/services/add_folder.dart';
 import 'package:network_applications/services/check_in.dart';
 import 'package:network_applications/services/upload_file.dart';
@@ -315,6 +316,18 @@ class _HomeState extends State<Home> {
                 }
               },
               child: const Text('Check Out'),
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: SizedBox(
+            width: RenderErrorBox.minimumWidth,
+            child: ElevatedButton(
+              onPressed: () {
+                downloadUserReport(currentUserID, currentUserName);
+              },
+              child: const Text('Download user report'),
             ),
           ),
         ),

@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:network_applications/components/projects_bar.dart';
 import 'package:network_applications/models/component.dart';
+import 'package:network_applications/services/file_report.dart';
 import 'package:network_applications/services/rename_folder.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -246,6 +247,18 @@ class _MyExplorerState extends State<MyExplorer> {
                                                   },
                                                   icon: const Icon(
                                                       Icons.arrow_downward))
+                                              : const SizedBox(
+                                                  width: 30,
+                                                ),
+                                          isFile
+                                              ? IconButton(
+                                                  onPressed: () {
+                                                    downloadFileReport(
+                                                        components[index].id,
+                                                        components[index].name);
+                                                  },
+                                                  icon: const Icon(
+                                                      Icons.sim_card_download))
                                               : const SizedBox(
                                                   width: 30,
                                                 ),

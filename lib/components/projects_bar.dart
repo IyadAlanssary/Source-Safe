@@ -18,6 +18,8 @@ import 'info_pop_up.dart';
 
 int selectedProject = -1;
 String projectName = '';
+int currentUserID = -1;
+String currentUserName = '';
 
 class Projects extends StatefulWidget {
   const Projects({super.key});
@@ -187,7 +189,11 @@ class _ProjectsState extends State<Projects> {
                     return ListTile(
                       leading: const Icon(Icons.person_2),
                       title: Text(users[index].username),
-                      onTap: () => {},
+                      onTap: () {
+                        currentUserID = users[index].id;
+                        currentUserName = users[index].username;
+                        print(currentUserID);
+                      },
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
