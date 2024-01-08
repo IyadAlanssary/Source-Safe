@@ -47,6 +47,9 @@ class _ProjectsState extends State<Projects> {
                   Drawer(
                     child: Column(
                       children: [
+                        const SizedBox(
+                            height: 60,
+                            child: DrawerHeader(child: Text("My Projects"))),
                         Expanded(
                           child: ListView.builder(
                             itemCount: projects.length,

@@ -145,6 +145,7 @@ class _MyExplorerState extends State<MyExplorer> {
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 10),
                                       child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceAround,
                                         children: [
                                           Padding(
                                             padding: const EdgeInsets.all(8.0),
@@ -194,7 +195,9 @@ class _MyExplorerState extends State<MyExplorer> {
                                                   },
                                                   icon: const Icon(
                                                       Icons.arrow_downward))
-                                              : const SizedBox(width: 25,),
+                                              : const SizedBox(
+                                                  width: 30,
+                                                ),
                                           isFile
                                               ? IconButton(
                                                   onPressed: () async {
@@ -210,7 +213,9 @@ class _MyExplorerState extends State<MyExplorer> {
                                                   },
                                                   icon:
                                                       const Icon(Icons.delete))
-                                              : Container(),
+                                              : const SizedBox(
+                                                  width: 30,
+                                                ),
                                           !isFile
                                               ? IconButton(
                                                   onPressed: () async {
@@ -226,7 +231,9 @@ class _MyExplorerState extends State<MyExplorer> {
                                                   },
                                                   icon:
                                                       const Icon(Icons.delete))
-                                              : Container(),
+                                              : const SizedBox(
+                                                  width: 30,
+                                                ),
                                           !isFile
                                               ? IconButton(
                                                   icon: const Icon(Icons
@@ -236,7 +243,9 @@ class _MyExplorerState extends State<MyExplorer> {
                                                         components[index].id);
                                                   },
                                                 )
-                                              : Container(),
+                                              : const SizedBox(
+                                                  width: 30,
+                                                ),
                                           (isFile && checkedBy == "")
                                               ? IconButton(
                                                   onPressed: () {
@@ -247,7 +256,9 @@ class _MyExplorerState extends State<MyExplorer> {
                                                     checkInPopUp();
                                                   },
                                                   icon: const Icon(Icons.check))
-                                              : Container(),
+                                              : const SizedBox(
+                                                  width: 30,
+                                                ),
                                           (isFile && checkedBy == userName)
                                               ? IconButton(
                                                   onPressed: () {
@@ -260,10 +271,14 @@ class _MyExplorerState extends State<MyExplorer> {
                                                   },
                                                   icon: const Icon(Icons
                                                       .indeterminate_check_box))
-                                              : Container(),
+                                              : const SizedBox(
+                                                  width: 30,
+                                                ),
                                           checkedBy != ""
                                               ? Text("Checked by: $checkedBy")
-                                              : Container(),
+                                              : const SizedBox(
+                                                  width: 120,
+                                                ),
                                         ],
                                       ),
                                     ),
