@@ -78,11 +78,6 @@ class _MyExplorerState extends State<MyExplorer> {
                     child: IconButton(
                         onPressed: goBack, icon: const Icon(Icons.arrow_back)),
                   ),
-                  // GestureDetector(
-                  //     onTap: goBack,
-                  //     child: const Align(
-                  //         alignment: Alignment.centerLeft,
-                  //         child: Icon(Icons.arrow_back))),
                   SizedBox(
                       height: 500,
                       child: ListView.builder(
@@ -96,210 +91,231 @@ class _MyExplorerState extends State<MyExplorer> {
                               checkedBy = file.checkedBy ?? "";
                             }
                             return Container(
-
-                                color: (selectedForCheckIn
-                                        .contains(components[index].id))
-                                    ? Colors.blue.withOpacity(0.5)
-                                    : Colors.transparent,
-                                child: GestureDetector(
-                                  onDoubleTap: () {
-                                    if (components[index] is MyFolder) {
-                                      selectedForCheckIn.clear();
-                                      setState(() {
-                                        currentFolderId = components[index].id;
-                                        //  parentFolderId = components[index].id;
-                                        foldersQueue
-                                            .add(components[index].folderId);
-                                        print(parentFolderId);
-                                        print(
-                                            'currentFolderId = $currentFolderId');
-                                      });
-                                    }
-                                  },
-                                  onTap: () {
-                                    if (selectedItem == index) {
-                                      setState(() {
-                                        selectedItem = -1;
-                                        selectedFileId = -1;
-                                        selectedFolderId = -1;
-                                      });
-                                    } else {
-                                      setState(() {
-                                        selectedItem = index;
-                                        if (components[index] is MyFolder) {
-                                          selectedFileId = -1;
-                                          selectedFolderId =
+                              decoration: BoxDecoration(
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.1),
+                                    spreadRadius: 0.1,
+                                  ),
+                                ],
+                              ),
+                              child: Container(
+                                  color: (selectedForCheckIn
+                                          .contains(components[index].id))
+                                      ? Colors.blue.withOpacity(0.5)
+                                      : Colors.transparent,
+                                  child: GestureDetector(
+                                    onDoubleTap: () {
+                                      if (components[index] is MyFolder) {
+                                        selectedForCheckIn.clear();
+                                        setState(() {
+                                          currentFolderId =
                                               components[index].id;
-                                        } else if (components[index]
-                                            is MyFile) {
+                                          //  parentFolderId = components[index].id;
+                                          foldersQueue
+                                              .add(components[index].folderId);
+                                          print(parentFolderId);
+                                          print(
+                                              'currentFolderId = $currentFolderId');
+                                        });
+                                      }
+                                    },
+                                    onTap: () {
+                                      if (selectedItem == index) {
+                                        setState(() {
+                                          selectedItem = -1;
+                                          selectedFileId = -1;
                                           selectedFolderId = -1;
-                                          if (selectedForCheckIn
-                                              .contains(components[index].id)) {
-                                            selectedForCheckIn.clear();
+                                        });
+                                      } else {
+                                        setState(() {
+                                          selectedItem = index;
+                                          if (components[index] is MyFolder) {
+                                            selectedFileId = -1;
+                                            selectedFolderId =
+                                                components[index].id;
+                                          } else if (components[index]
+                                              is MyFile) {
+                                            selectedFolderId = -1;
+                                            if (selectedForCheckIn.contains(
+                                                components[index].id)) {
+                                              selectedForCheckIn.clear();
+                                              selectedForCheckIn
+                                                  .add(components[index].id);
+                                            }
                                             selectedForCheckIn
                                                 .add(components[index].id);
+                                            selectedFileId =
+                                                components[index].id;
+                                            selectedFileName =
+                                                components[index].name;
                                           }
-                                          selectedForCheckIn
-                                              .add(components[index].id);
-                                          selectedFileId = components[index].id;
-                                          selectedFileName =
-                                              components[index].name;
-                                        }
-                                      });
-                                    }
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Container(
-                                      color: Colors.grey.shade50,
-                                      height: 50,
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 10),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceAround,
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: GestureDetector(
-                                              onTap: () {
-                                                if (selectedForCheckIn.contains(
-                                                    components[index].id)) {
-                                                  setState(() {
-                                                    selectedForCheckIn.remove(
-                                                        components[index].id);
-                                                    print(selectedForCheckIn);
-                                                  });
-                                                } else {
-                                                  setState(() {
-                                                    selectedForCheckIn.add(
-                                                        components[index].id);
-                                                    print(selectedForCheckIn);
-                                                  });
-                                                }
-                                              },
-                                              child:
-                                                  (components[index] is MyFile)
-                                                      ? Container(
-                                                          width: 20,
-                                                          height: 20,
-                                                          color: (selectedForCheckIn
-                                                                  .contains(
-                                                                      components[
-                                                                              index]
-                                                                          .id))
-                                                              ? Colors.green
-                                                              : Colors.grey,
-                                                        )
-                                                      : SizedBox(),
-                                            ),
-                                          ),
-                                          Image.asset(
-                                            components[index].icon.toString(),
-                                            width: 35,
-                                          ),
-                                          const SizedBox(width: 10),
-                                          Text(
-                                            components[index].name,
-                                          ),
-                                          const Spacer(),
-                                          isFile
-                                              ? IconButton(
-                                                  onPressed: () {
-                                                    downloadFile(
-                                                        components[index].id,
-                                                        components[index].name);
-                                                  },
-                                                  icon: const Icon(
-                                                      Icons.arrow_downward))
-                                              : const SizedBox(
-                                                  width: 30,
-                                                ),
-                                          isFile
-                                              ? IconButton(
-                                                  onPressed: () async {
-                                                    if (await deleteFileService(
-                                                        components[index].id)) {
-                                                      refreshList();
-                                                    } else {
-                                                      infoPopUp(context,
-                                                          title: "Error",
-                                                          info:
-                                                              "Could not delete file");
-                                                    }
-                                                  },
-                                                  icon:
-                                                      const Icon(Icons.delete))
-                                              : const SizedBox(
-                                                  width: 30,
-                                                ),
-                                          !isFile
-                                              ? IconButton(
-                                                  onPressed: () async {
-                                                    if (await deleteFolderService(
-                                                        components[index].id)) {
-                                                      refreshList();
-                                                    } else {
-                                                      infoPopUp(context,
-                                                          title: "Error",
-                                                          info:
-                                                              "Could not delete folder");
-                                                    }
-                                                  },
-                                                  icon:
-                                                      const Icon(Icons.delete))
-                                              : Container(),
-                                          !isFile
-                                              ? IconButton(
-                                                  icon: const Icon(Icons
-                                                      .drive_file_rename_outline),
-                                                  onPressed: () {
-                                                    renameFolderPopUp(
-                                                        components[index].id);
-                                                  },
-                                                )
-                                              : Container(),
-                                          (isFile && checkedBy == "")
-                                              ? IconButton(
-                                                  onPressed: () {
-                                                    selectedForCheckIn.clear();
-                                                    selectedForCheckIn.add(
-                                                        components[index].id);
-                                                    setState(() {});
-                                                    checkInPopUp();
-                                                  },
-                                                  icon: const Icon(Icons.check))
-                                              : Container(),
-                                          (isFile && checkedBy == userName)
-                                              ? IconButton(
-                                                  onPressed: () {
-                                                    selectedForCheckIn.clear();
-                                                    selectedForCheckIn.add(
-                                                        components[index].id);
-                                                    print(selectedForCheckIn);
-                                                    checkoutTemp.addAll(
-                                                        selectedForCheckIn);
-                                                    _showDialogCheckOut(
-                                                        context, checkoutTemp);
-                                                    //      checkOutFile(checkoutTemp);
+                                        });
+                                      }
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Container(
+                                        color: Colors.grey.shade50,
+                                        height: 50,
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 10),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceAround,
+                                          children: [
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: GestureDetector(
+                                                onTap: () {
+                                                  if (selectedForCheckIn
+                                                      .contains(
+                                                          components[index]
+                                                              .id)) {
                                                     setState(() {
+                                                      selectedForCheckIn.remove(
+                                                          components[index].id);
+                                                      print(selectedForCheckIn);
+                                                    });
+                                                  } else {
+                                                    setState(() {
+                                                      selectedForCheckIn.add(
+                                                          components[index].id);
+                                                      print(selectedForCheckIn);
+                                                    });
+                                                  }
+                                                },
+                                                child:
+                                                    (components[index]
+                                                            is MyFile)
+                                                        ? Container(
+                                                            width: 20,
+                                                            height: 20,
+                                                            color: (selectedForCheckIn
+                                                                    .contains(
+                                                                        components[index]
+                                                                            .id))
+                                                                ? Colors.green
+                                                                : Colors.grey,
+                                                          )
+                                                        : SizedBox(),
+                                              ),
+                                            ),
+                                            Image.asset(
+                                              components[index].icon.toString(),
+                                              width: 35,
+                                            ),
+                                            const SizedBox(width: 10),
+                                            Text(
+                                              components[index].name,
+                                            ),
+                                            const Spacer(),
+                                            isFile
+                                                ? IconButton(
+                                                    onPressed: () {
+                                                      downloadFile(
+                                                          components[index].id,
+                                                          components[index]
+                                                              .name);
+                                                    },
+                                                    icon: const Icon(
+                                                        Icons.arrow_downward))
+                                                : const SizedBox(
+                                                    width: 30,
+                                                  ),
+                                            isFile
+                                                ? IconButton(
+                                                    onPressed: () async {
+                                                      if (await deleteFileService(
+                                                          components[index]
+                                                              .id)) {
+                                                        refreshList();
+                                                      } else {
+                                                        infoPopUp(context,
+                                                            title: "Error",
+                                                            info:
+                                                                "Could not delete file");
+                                                      }
+                                                    },
+                                                    icon: const Icon(
+                                                        Icons.delete))
+                                                : const SizedBox(
+                                                    width: 30,
+                                                  ),
+                                            !isFile
+                                                ? IconButton(
+                                                    onPressed: () async {
+                                                      if (await deleteFolderService(
+                                                          components[index]
+                                                              .id)) {
+                                                        refreshList();
+                                                      } else {
+                                                        infoPopUp(context,
+                                                            title: "Error",
+                                                            info:
+                                                                "Could not delete folder");
+                                                      }
+                                                    },
+                                                    icon: const Icon(
+                                                        Icons.delete))
+                                                : Container(),
+                                            !isFile
+                                                ? IconButton(
+                                                    icon: const Icon(Icons
+                                                        .drive_file_rename_outline),
+                                                    onPressed: () {
+                                                      renameFolderPopUp(
+                                                          components[index].id);
+                                                    },
+                                                  )
+                                                : Container(),
+                                            (isFile && checkedBy == "")
+                                                ? IconButton(
+                                                    onPressed: () {
                                                       selectedForCheckIn
                                                           .clear();
-                                                    });
-                                                  },
-                                                  icon: const Icon(Icons
-                                                      .indeterminate_check_box))
-                                              : Container(),
-                                          checkedBy != ""
-                                              ? Text("Checked by: $checkedBy")
-                                              : const SizedBox(
-                                                  width: 150,
-                                                ),
-                                        ],
+                                                      selectedForCheckIn.add(
+                                                          components[index].id);
+                                                      setState(() {});
+                                                      checkInPopUp();
+                                                    },
+                                                    icon:
+                                                        const Icon(Icons.check))
+                                                : Container(),
+                                            (isFile && checkedBy == userName)
+                                                ? IconButton(
+                                                    onPressed: () {
+                                                      selectedForCheckIn
+                                                          .clear();
+                                                      selectedForCheckIn.add(
+                                                          components[index].id);
+                                                      print(selectedForCheckIn);
+                                                      checkoutTemp.addAll(
+                                                          selectedForCheckIn);
+                                                      _showDialogCheckOut(
+                                                          context,
+                                                          checkoutTemp);
+                                                      //      checkOutFile(checkoutTemp);
+                                                      setState(() {
+                                                        selectedForCheckIn
+                                                            .clear();
+                                                      });
+                                                    },
+                                                    icon: const Icon(Icons
+                                                        .indeterminate_check_box))
+                                                : Container(),
+                                            checkedBy != ""
+                                                ? Text("Checked by: $checkedBy")
+                                                : const SizedBox(
+                                                    width: 150,
+                                                  ),
+                                          ],
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ));
+                                  )),
+                            );
                           })),
                 ],
               );
