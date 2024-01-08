@@ -12,7 +12,6 @@ import 'package:network_applications/screens/log_in.dart';
 import 'package:network_applications/components/projects_bar.dart';
 import 'package:network_applications/services/add_folder.dart';
 import 'package:network_applications/services/check_in.dart';
-import 'package:network_applications/services/delete_file.dart';
 import 'package:network_applications/services/upload_file.dart';
 import 'package:provider/provider.dart';
 import '../services/Projects/get_my_projects.dart';
@@ -205,8 +204,17 @@ class _HomeState extends State<Home> {
               children: [
                 const Expanded(
                   child: Center(
-                      child:
-                          Text('Source Safe', style: TextStyle(fontSize: 40))),
+                      child: Text('Source Safe',
+                          style: TextStyle(
+                            fontSize: 40,
+                            letterSpacing: 8,
+                            shadows: <Shadow>[
+                              Shadow(
+                                offset: Offset(-5, 5),
+                                color: Color.fromARGB(20, 0, 0, 0),
+                              ),
+                            ],
+                          ))),
                 ),
                 Align(
                   alignment: Alignment.centerRight,

@@ -26,7 +26,16 @@ class _LogInState extends State<LogIn> {
           children: [
             const Text(
               "Log in",
-              style: TextStyle(fontSize: 42),
+              style: TextStyle(
+                fontSize: 60,
+                letterSpacing: 8,
+                shadows: <Shadow>[
+                  Shadow(
+                    offset: Offset(-5, 5),
+                    color: Color.fromARGB(20, 0, 0, 0),
+                  ),
+                ],
+              ),
             ),
             gapH20,
             TextField(
@@ -66,7 +75,9 @@ class _LogInState extends State<LogIn> {
                 Navigator.pushReplacement(context,
                     MaterialPageRoute(builder: (context) => const Home()));
               },
-              child: const Text('Log in'),
+              child: const Text(
+                'Log in',
+              ),
             ),
             gapH16,
             doNotHaveAnAccountYet(context),

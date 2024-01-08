@@ -49,7 +49,9 @@ class _ProjectsState extends State<Projects> {
                       children: [
                         const SizedBox(
                             height: 60,
-                            child: DrawerHeader(child: Text("My Projects", style: TextStyle(fontSize: 22)))),
+                            child: DrawerHeader(
+                                child: Text("My Projects",
+                                    style: TextStyle(fontSize: 22)))),
                         Expanded(
                           child: ListView.builder(
                             itemCount: projects.length,
@@ -109,9 +111,17 @@ class _ProjectsState extends State<Projects> {
                             ),
                           ),
                         ),
-                        IconButton(
+                        ElevatedButton(
                             onPressed: addProjectPopUp,
-                            icon: const Icon(Icons.add))
+                            child: const Center(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(Icons.add),
+                                  Text(" Create Project")
+                                ],
+                              ),
+                            ))
                       ],
                     ),
                   ),
