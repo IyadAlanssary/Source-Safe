@@ -71,11 +71,17 @@ class _MyExplorerState extends State<MyExplorer> {
               List<MyComponent> components = snapshot.data!;
               return Column(
                 children: [
-                  GestureDetector(
-                      onTap: goBack,
-                      child: const Align(
-                          alignment: Alignment.centerLeft,
-                          child: Icon(Icons.arrow_back))),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: IconButton(
+                        onPressed: goBack,
+                        icon: const Icon(Icons.arrow_back)),
+                  ),
+                  // GestureDetector(
+                  //     onTap: goBack,
+                  //     child: const Align(
+                  //         alignment: Alignment.centerLeft,
+                  //         child: Icon(Icons.arrow_back))),
                   SizedBox(
                       height: 500,
                       child: ListView.builder(
