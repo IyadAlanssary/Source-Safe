@@ -17,6 +17,7 @@ import '../services/Projects/get_my_projects.dart';
 import 'info_pop_up.dart';
 
 int selectedProject = -1;
+String projectName = '';
 
 class Projects extends StatefulWidget {
   const Projects({super.key});
@@ -96,6 +97,7 @@ class _ProjectsState extends State<Projects> {
                                     //   }
                                     // }
                                     selectedProject = projects[index].id!;
+                                    projectName = projects[index].name;
                                     currentFolderId =
                                         projects[index].rootFolderId!;
                                     refreshList();

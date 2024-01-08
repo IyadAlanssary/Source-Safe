@@ -2,8 +2,10 @@ import 'dart:collection';
 import 'dart:developer';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:network_applications/components/projects_bar.dart';
 import 'package:network_applications/models/component.dart';
 import 'package:network_applications/services/rename_folder.dart';
 import 'package:provider/provider.dart';
@@ -29,7 +31,6 @@ int currentFolderId = -1;
 List<int> selectedForCheckIn = [];
 Queue<int> foldersQueue = Queue<int>();
 int parentFolderId = 0;
-List<int> checkoutTemp = [];
 
 class MyExplorer extends StatefulWidget {
   const MyExplorer({super.key});
@@ -41,6 +42,7 @@ class MyExplorer extends StatefulWidget {
 class _MyExplorerState extends State<MyExplorer> {
   int selectedItem = -1;
   String userName = "";
+  String currentPath = '$projectName/'; // Initial path
 
   @override
   void initState() {
@@ -58,7 +60,24 @@ class _MyExplorerState extends State<MyExplorer> {
       parentFolderId = foldersQueue.removeLast();
       currentFolderId = parentFolderId;
     });
+    navigateBack();
     print('currentFolderId = $currentFolderId');
+  }
+
+  void navigateIntoFolder(String folderName) {
+    setState(() {
+      currentPath = '$currentPath$folderName/'; // Update the path
+    });
+  }
+
+  void navigateBack() {
+    if (currentPath != '/') {
+      setState(() {
+        currentPath = currentPath.substring(0, currentPath.length - 1);
+        currentPath =
+            currentPath.substring(0, currentPath.lastIndexOf('/') + 1);
+      });
+    }
   }
 
   @override
@@ -77,6 +96,20 @@ class _MyExplorerState extends State<MyExplorer> {
                     alignment: Alignment.centerLeft,
                     child: IconButton(
                         onPressed: goBack, icon: const Icon(Icons.arrow_back)),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      color: secondary1,
+                      height: 40,
+                      width: MediaQuery.sizeOf(context).width,
+                      child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 8.0),
+                            child: Text("$currentPath"),
+                          )),
+                    ),
                   ),
                   // GestureDetector(
                   //     onTap: goBack,
@@ -109,6 +142,8 @@ class _MyExplorerState extends State<MyExplorer> {
                                         //  parentFolderId = components[index].id;
                                         foldersQueue
                                             .add(components[index].folderId);
+                                        navigateIntoFolder(
+                                            components[index].name);
                                         print(parentFolderId);
                                         print(
                                             'currentFolderId = $currentFolderId');
@@ -275,11 +310,12 @@ class _MyExplorerState extends State<MyExplorer> {
                                                     selectedForCheckIn.clear();
                                                     selectedForCheckIn.add(
                                                         components[index].id);
-                                                    print(selectedForCheckIn);
-                                                    checkoutTemp.addAll(
+                                                    List<int> outTemp = [];
+                                                    outTemp.addAll(
                                                         selectedForCheckIn);
+
                                                     _showDialogCheckOut(
-                                                        context, checkoutTemp);
+                                                        context, outTemp);
                                                     //      checkOutFile(checkoutTemp);
                                                     setState(() {
                                                       selectedForCheckIn
