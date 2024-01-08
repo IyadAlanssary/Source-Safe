@@ -22,7 +22,7 @@ class AppTheme {
       elevatedButtonTheme: _elevatedButtonThemeData(colors),
       inputDecorationTheme: _inputDecorationTheme(),
       cardTheme: CardTheme(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
         elevation: 8,
         shadowColor: colors.shadow,
         surfaceTintColor: colors.surface,
@@ -52,13 +52,12 @@ class AppTheme {
         foregroundColor: colors.onPrimary,
         textStyle: const TextStyle(
           fontFamily: "Bebas Neue",
-          fontWeight: FontWeight.bold,
           letterSpacing: 4,
-        fontSize: 16,
+        fontSize: 18,
           height: 24 / 22,
         ),
         minimumSize: const Size.fromHeight(50),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
       ),
     );
   }
@@ -66,7 +65,7 @@ class AppTheme {
   static InputDecorationTheme _inputDecorationTheme() {
     return InputDecorationTheme(
       border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(6),
       ),
     );
   }

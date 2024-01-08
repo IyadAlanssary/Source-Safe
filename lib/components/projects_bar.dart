@@ -49,7 +49,7 @@ class _ProjectsState extends State<Projects> {
                       children: [
                         const SizedBox(
                             height: 60,
-                            child: DrawerHeader(child: Text("My Projects"))),
+                            child: DrawerHeader(child: Text("My Projects", style: TextStyle(fontSize: 22)))),
                         Expanded(
                           child: ListView.builder(
                             itemCount: projects.length,
@@ -117,7 +117,9 @@ class _ProjectsState extends State<Projects> {
                   ),
                   Expanded(
                     child: (selectedProject == -1)
-                        ? const Center(child: Text("Select a project"))
+                        ? const Center(
+                            child: Text("Select a project",
+                                style: TextStyle(fontSize: 22)))
                         : const MyExplorer(),
                   ),
                 ],
@@ -363,7 +365,7 @@ class _ProjectsState extends State<Projects> {
                   ),
                   gapH16,
                   showList
-                      ? const Text(" Search For Users")
+                      ? Container()
                       : Expanded(
                           child: Consumer<SearchForUsers>(
                             builder: (context, componentController, child) {

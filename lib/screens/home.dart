@@ -145,18 +145,19 @@ class _HomeState extends State<Home> {
         child: Column(
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text('Source Safe', style: TextStyle(fontSize: 36)),
-                Expanded(
-                  child: Align(
-                    alignment: Alignment.centerRight,
-                    child: IconButton(
-                      onPressed: logOut,
-                      icon: const Icon(Icons.logout),
-                    ),
+                const Expanded(
+                  child: Center(
+                      child:
+                          Text('Source Safe', style: TextStyle(fontSize: 40))),
+                ),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: IconButton(
+                    onPressed: logOut,
+                    icon: const Icon(Icons.logout),
                   ),
-                )
+                ),
               ],
             ),
             buildButtonsRow(),
