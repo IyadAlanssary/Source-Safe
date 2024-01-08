@@ -51,6 +51,12 @@ class _SplashScreenState extends State<SplashScreen>
     super.initState();
   }
 
+@override
+dispose() {
+  _controller.dispose(); // you need this
+  super.dispose();
+}
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
