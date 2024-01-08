@@ -1,6 +1,5 @@
 import "package:network_applications/constants/api.dart";
 import 'dart:html' as html;
-
 import '../../helpers/shared_pref_helper.dart';
 
 Future<void> downloadFileReport(int fileId, String name) async {
@@ -15,7 +14,7 @@ Future<void> downloadFileReport(int fileId, String name) async {
     html.AnchorElement anchorElement = html.AnchorElement(
         href: html.Url.createObjectUrlFromBlob(request.response));
     print(request.status);
-    anchorElement.download = "File Report $name";
+    anchorElement.download = "File Report $name.txt";
     anchorElement.click();
   });
   request.send();

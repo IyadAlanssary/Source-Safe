@@ -93,30 +93,30 @@ class _MyExplorerState extends State<MyExplorer> {
               List<MyComponent> components = snapshot.data!;
               return Column(
                 children: [
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: IconButton(
-                        onPressed: goBack, icon: const Icon(Icons.arrow_back)),
+                  Row(
+                    children: [
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: IconButton(
+                            onPressed: goBack,
+                            icon: const Icon(Icons.arrow_back)),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Expanded(
+                          child: Container(
+                            color: secondary1,
+                            child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 8.0),
+                                  child: Text(currentPath),
+                                )),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      color: secondary1,
-                      height: 40,
-                      width: MediaQuery.sizeOf(context).width,
-                      child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 8.0),
-                            child: Text("$currentPath"),
-                          )),
-                    ),
-                  ),
-                  // GestureDetector(
-                  //     onTap: goBack,
-                  //     child: const Align(
-                  //         alignment: Alignment.centerLeft,
-                  //         child: Icon(Icons.arrow_back))),
                   SizedBox(
                       height: 500,
                       child: ListView.builder(

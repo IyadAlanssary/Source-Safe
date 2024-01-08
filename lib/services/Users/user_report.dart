@@ -15,7 +15,7 @@ Future<void> downloadUserReport(int userID, String name) async {
     html.AnchorElement anchorElement = html.AnchorElement(
         href: html.Url.createObjectUrlFromBlob(request.response));
     print(request.status);
-    anchorElement.download = "$name Report";
+    anchorElement.download = "$name Report.txt";
     anchorElement.click();
   });
   request.send();
