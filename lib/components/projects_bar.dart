@@ -17,6 +17,7 @@ import '../services/Projects/get_my_projects.dart';
 import 'info_pop_up.dart';
 
 int selectedProject = -1;
+String projectName = '';
 
 class Projects extends StatefulWidget {
   const Projects({super.key});
@@ -26,7 +27,6 @@ class Projects extends StatefulWidget {
 }
 
 class _ProjectsState extends State<Projects> {
-
   @override
   Widget build(BuildContext context) {
     return Consumer<GetProjects>(
@@ -82,6 +82,7 @@ class _ProjectsState extends State<Projects> {
                                 setState(() {
                                   if (expand) {
                                     selectedProject = projects[index].id!;
+                                    projectName = projects[index].name;
                                     currentFolderId =
                                         projects[index].rootFolderId!;
                                     refreshList();
