@@ -206,12 +206,12 @@ class _HomeState extends State<Home> {
                   child: Center(
                       child: Text('Source Safe',
                           style: TextStyle(
-                            fontSize: 40,
+                            fontSize: 45,
                             letterSpacing: 8,
                             shadows: <Shadow>[
                               Shadow(
                                 offset: Offset(-5, 5),
-                                color: Color.fromARGB(20, 0, 0, 0),
+                                color: Color.fromARGB(50, 0, 0, 0),
                               ),
                             ],
                           ))),

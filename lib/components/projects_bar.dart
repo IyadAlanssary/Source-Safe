@@ -47,7 +47,7 @@ class _ProjectsState extends State<Projects> {
                             height: 60,
                             child: DrawerHeader(
                                 child: Text("My Projects",
-                                    style: TextStyle(fontSize: 22)))),
+                                    style: TextStyle(fontSize: 25)))),
                         Expanded(
                           child: ListView.builder(
                             itemCount: projects.length,
@@ -115,7 +115,7 @@ class _ProjectsState extends State<Projects> {
                     child: (selectedProject == -1)
                         ? const Center(
                             child: Text("Select a project",
-                                style: TextStyle(fontSize: 22)))
+                                style: TextStyle(fontSize: 25)))
                         : const MyExplorer(),
                   ),
                 ],

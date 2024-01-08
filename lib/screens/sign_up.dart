@@ -26,7 +26,7 @@ class _SignUpState extends State<SignUp> {
           children: [
             const Text(
               "Sign Up",
-              style: TextStyle(fontSize: 42),
+              style: TextStyle(fontSize: 50),
             ),
             gapH20,
             TextField(
@@ -89,12 +89,12 @@ class _SignUpState extends State<SignUp> {
       children: [
         const Text(
           'Already have an account? ',
-          style: TextStyle(fontSize: 15),
+          style: TextStyle(fontSize: 20),
         ),
         InkWell(
             child: const Text(
               'Log In',
-              style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             onTap: () {
               Navigator.push(
