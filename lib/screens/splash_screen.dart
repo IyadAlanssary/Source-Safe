@@ -66,12 +66,12 @@ class _SplashScreenState extends State<SplashScreen>
               child: Text(
             'Source Safe',
             style: TextStyle(
-              fontSize: 70,
+              fontSize: 75,
               letterSpacing: 8,
               shadows: <Shadow>[
                 Shadow(
                   offset: Offset(-5, 5),
-                  color: Color.fromARGB(20, 0, 0, 0),
+                  color: Color.fromARGB(50, 0, 0, 0),
                 ),
               ],
             ),

@@ -27,12 +27,12 @@ class _LogInState extends State<LogIn> {
             const Text(
               "Log in",
               style: TextStyle(
-                fontSize: 60,
+                fontSize: 70,
                 letterSpacing: 8,
                 shadows: <Shadow>[
                   Shadow(
                     offset: Offset(-5, 5),
-                    color: Color.fromARGB(20, 0, 0, 0),
+                    color: Color.fromARGB(50, 0, 0, 0),
                   ),
                 ],
               ),
@@ -109,12 +109,12 @@ class _LogInState extends State<LogIn> {
       children: [
         const Text(
           'Don\'t have an account yet? ',
-          style: TextStyle(fontSize: 15),
+          style: TextStyle(fontSize: 20),
         ),
         InkWell(
             child: const Text(
               'Sign Up',
-              style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             onTap: () {
               Navigator.push(
