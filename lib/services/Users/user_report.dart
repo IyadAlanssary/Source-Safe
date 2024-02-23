@@ -4,7 +4,7 @@ import 'dart:html' as html;
 import '../../helpers/shared_pref_helper.dart';
 
 Future<void> downloadUserReport(int userID, String name) async {
-  String url = "$localHostApi/files/$userID/report";
+  String url = "$localHostApi/users/$userID/report";
   String token = await PrefService().readToken();
   html.HttpRequest request = html.HttpRequest();
   request.open('GET', url);
