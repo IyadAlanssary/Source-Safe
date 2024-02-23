@@ -17,14 +17,26 @@ The application is divided into two parts: the front-end and the back-end. The f
 
 Here are some screenshots of the application:
 
+Home Page
+
 <img src="https://github.com/IyadAlanssary/Source-Safe/blob/NewOrder/.Screenshots/Home.png" alt="Home" width="800"/>
+
+Add a user to a project
 
 <img src="https://github.com/IyadAlanssary/Source-Safe/blob/NewOrder/.Screenshots/Add%20user%20to%20project.png" alt="Add Users" width="800"/>
 
+Generate a report detailing the user's activities
+
 <img src="https://github.com/IyadAlanssary/Source-Safe/blob/NewOrder/.Screenshots/User%20report.png" alt="User Report" width="800"/>
+
+Generate a report of the users who have modified the file
 
 <img src="https://github.com/IyadAlanssary/Source-Safe/blob/NewOrder/.Screenshots/File%20report.png" alt="File Report" width="800"/>
 
-<img src="https://github.com/IyadAlanssary/Source-Safe/blob/NewOrder/.Screenshots/Log%20in.png" alt="Log In" width="800"/>
+Options for checking out (you have the choice to either revert the file to its initial state or upload your altered version).
 
 <img src="https://github.com/IyadAlanssary/Source-Safe/blob/NewOrder/.Screenshots/Check%20out%20file%20options.png" alt="Check Out Options" width="800"/>
+
+Log In
+
+<img src="https://github.com/IyadAlanssary/Source-Safe/blob/NewOrder/.Screenshots/Log%20in.png" alt="Log In" width="800"/>
