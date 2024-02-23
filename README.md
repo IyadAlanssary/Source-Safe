@@ -17,14 +17,14 @@ The application is divided into two parts: the front-end and the back-end. The f
 
 Here are some screenshots of the application:
 
-<img src="https://github.com/IyadAlanssary/Source-Safe/blob/NewOrder/.Screenshots/Home.png" alt="Home" width="200"/>
+<img src="https://github.com/IyadAlanssary/Source-Safe/blob/NewOrder/.Screenshots/Home.png" alt="Home" width="800"/>
 
-<img src="https://github.com/IyadAlanssary/Source-Safe/blob/NewOrder/.Screenshots/Add%20user%20to%20project.png" alt="Add Users" width="200"/>
+<img src="https://github.com/IyadAlanssary/Source-Safe/blob/NewOrder/.Screenshots/Add%20user%20to%20project.png" alt="Add Users" width="800"/>
 
-<img src="https://github.com/IyadAlanssary/Source-Safe/blob/NewOrder/.Screenshots/User%20report.png" alt="User Report" width="200"/>
+<img src="https://github.com/IyadAlanssary/Source-Safe/blob/NewOrder/.Screenshots/User%20report.png" alt="User Report" width="800"/>
 
-<img src="https://github.com/IyadAlanssary/Source-Safe/blob/NewOrder/.Screenshots/File%20report.png" alt="File Report" width="200"/>
+<img src="https://github.com/IyadAlanssary/Source-Safe/blob/NewOrder/.Screenshots/File%20report.png" alt="File Report" width="800"/>
 
-<img src="https://github.com/IyadAlanssary/Source-Safe/blob/NewOrder/.Screenshots/Log%20in.png" alt="Log In" width="200"/>
+<img src="https://github.com/IyadAlanssary/Source-Safe/blob/NewOrder/.Screenshots/Log%20in.png" alt="Log In" width="800"/>
 
-<img src="https://github.com/IyadAlanssary/Source-Safe/blob/NewOrder/.Screenshots/Check%20out%20file%20options.png" alt="Check Out Options" width="200"/>
+<img src="https://github.com/IyadAlanssary/Source-Safe/blob/NewOrder/.Screenshots/Check%20out%20file%20options.png" alt="Check Out Options" width="800"/>
