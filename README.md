@@ -3,7 +3,7 @@ This project, developed as a 5th-year university project for the Network Applica
 
 ## Introduction
 
-The application is divided into two parts: the front-end and the back-end. The front-end, which is what you're currently viewing, is written in Dart using the Flutter framework. The back-end can be found at (link to repo).
+The application is divided into two parts: the front-end and the back-end. The front-end, which is what you're currently viewing, is written in Dart using the Flutter framework. The back-end can be found [here](https://github.com/RedWn/Source-Safe)
 
 ## Key Features
 
