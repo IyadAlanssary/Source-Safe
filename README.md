@@ -10,8 +10,8 @@ The application is divided into two parts: the front-end and the back-end. The f
 -   Ability to upload and download files from the projects you're participating in.
 -   File check-in system that allows only the user who checked it in to edit or delete the file.
 -   File check-out system for when you've finished editing a file.
--   Project (group) creation and user assignment functionality (admin-only feature).
--   Capability to create and delete folders within projects.
+-   Project (group) creation and user assignment functionality (admin-only feature) .
+-   Capability to create and delete folders within projects .
 
 ## Screenshots
 
