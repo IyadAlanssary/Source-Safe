@@ -15,7 +15,7 @@ The application is divided into two parts: the front-end and the back-end. The f
 
 ## Screenshots
 
-Here are some screenshots of the application:
+Here are some screenshots of the application :
 
 Home Page
 
