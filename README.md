@@ -27,7 +27,7 @@ Add a user to a project
 
 Generate a report detailing the user's activities
 
-<img src="https://github.com/IyadAlanssary/Source-Safe/blob/NewOrder/.Screenshots/User%20report.png" alt="User Report" width="800"/>
+<img src="https://github.com/IyadAlanssary/Source-Safe/blob/NewOrder/User%20report.png" alt="User Report" width="800"/>
 
 Generate a report of the users who have modified the file
 
