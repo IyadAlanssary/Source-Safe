@@ -39,4 +39,4 @@ Options for checking out (you have the choice to either revert the file to its i
 
 Log In
 
-<img src="https://github.com/IyadAlanssary/Source-Safe/blob/NewOrder/Log%20in.png alt="Log In" width="800"/>
+<img src="https://github.com/IyadAlanssary/Source-Safe/blob/NewOrder/Log%20in.png" alt="Log In" width="800"/>
